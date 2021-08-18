@@ -76,7 +76,6 @@ class Personagem:
 
     # Torna o Personagem invulnerável por um determinado tempo, que, assume 0.5 segundos caso o valor não for especificado
     def tornar_invulneravel_por(self, tempo_inv=500):
-    
         self.__tempo_inicial_inv = pygame.time.get_ticks()
         self.__tempo_inv = tempo_inv
         self.__invulneravel = True

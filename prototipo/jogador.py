@@ -20,6 +20,14 @@ class Jogador(Personagem):
     def retangulo(self):
         return self.__retangulo
 
+    @property
+    def tamanho_pulo(self):
+        return self.__tamanho_pulo
+
+    @tamanho_pulo.setter
+    def tamanho_pulo(self, novo):
+        self.__tamanho_pulo = novo
+
     # movimentos do jogador
     def movimento(self, dt):
 
@@ -40,11 +48,9 @@ class Jogador(Personagem):
         # movimento para cima
         if self.__pulando is False and botoes[pygame.K_UP]:
             self.__pulando = True
-
-        # tamanho do pulo
         if self.__pulando:
-            self.posicao[1] -= self.__velocidade_y*self.__tamanho_pulo * dt 
-            self.__velocidade_y -= 0.05 # velocidade que o jogador cai
+            self.posicao[1] -= self.__velocidade_y*self.__tamanho_pulo * dt         # tamanho do pulo
+            self.__velocidade_y -= 0.05                                             # velocidade que o jogador cai
             
             # checa a colisão com o chão
             if self.posicao[1] >= 484: 
@@ -52,16 +58,17 @@ class Jogador(Personagem):
                 self.__pulando = False
                 self.__velocidade_y = 10
 
-    # Checa se jogador está invulnerável 
-    def checa_inv(self):
-
+    # eventos do jogador
+    def eventos(self):
+        
+        # aciona timer se jogador está invulnerável
         if self.invulneravel:
             self.cor = (0, 0, 255)
 
-            # conta o tempo de invulnerabilidade
             if pygame.time.get_ticks() - self.tempo_inicial_inv >= self.tempo_inv:
                 self.invulneravel = False
                 self.cor = (255, 0, 0)
+            
 
     # desenha o jogador e a sua vida
     def desenhar(self):
@@ -78,4 +85,4 @@ class Jogador(Personagem):
     def atualizar(self, dt):
         self.desenhar()
         self.movimento(dt)
-        self.checa_inv()
+        self.eventos()

@@ -13,11 +13,11 @@ class Sistema:
         pygame.init()
         tempo_inicial = time.time()
 
-        self.__estado_jogo = "jogando"
+        self.__estado_jogo = "jogando"     # a ser implementado com o menu
         self.__recorde = 0
         self.__jogo = Jogo(jogador=Jogador(),
-                            cenario=Cenario([Obstaculo("Golem", [928,484], 400, [20,50]),
-                                            Obstaculo("Morcego", [1500,440], 465, [25,25])]),
+                            cenario=Cenario([Obstaculo([928,484], 400, [20,50]),    # Golem
+                                            Obstaculo([1500,440], 465, [25,25])]),  # Mocego
                             inimigos=[]
                         )
         

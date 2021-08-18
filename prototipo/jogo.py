@@ -1,5 +1,4 @@
 from jogador import Jogador
-from obstaculo import Obstaculo
 from cenario import Cenario
 from tela import tela
 import pygame
@@ -21,15 +20,24 @@ class Jogo():
     def jogador(self, jogador):
         self.__jogador = jogador
 
+
     # checa as colisões entre obstaculos e poderes e o jogador
     def checar_colisao(self):
 
+        # obstáculos
         for obs in self.__cenario.obstaculos:
             if self.__jogador.retangulo.colliderect(obs.retangulo) and self.__jogador.invulneravel is False:
                 self.__jogador.tornar_invulneravel_por()
 
                 # perde uma vida (tira 1 coraçao na tela)
                 self.__jogador.vida -= 1
+
+        # poder
+        if self.__cenario.poder_na_tela != None:
+            if self.__jogador.retangulo.colliderect(self.__cenario.poder_na_tela.retangulo):
+                self.__cenario.poder_na_tela.usar(self.__jogador)
+                self.__cenario.poder_na_tela = None
+
 
     # Pontua e mostra a pontuação com base no tempo de jogo e na velocidade dos obstaculos
     def pontuar(self, dt):
@@ -40,6 +48,7 @@ class Jogo():
         font = pygame.font.Font(pygame.font.get_default_font(), 32)
         text_surface = font.render("{:.1f}".format(self.__pontuacao), True, (255, 255, 255))
         tela.screen.blit(text_surface, (10, 10))
+
 
     # Responsável por atualizar tudo dentro do jogo, AKA Update Function
     def atualizar(self, dt):
