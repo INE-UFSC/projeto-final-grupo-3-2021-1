@@ -1,50 +1,82 @@
 import pygame
 
-class Personagem(pygame.sprite.Sprite):
+
+class Personagem:
 
     def __init__(self, vida, vida_maxima, velocidade, posicao):
+        self.__cor = (255, 0, 0)
         self.__vida = vida
         self.__vida_maxima = vida_maxima
+        self.__invulneravel = False
+        self.__tempo_inicial_inv = 0
+        self.__tempo_inv = 0
         self.__velocidade = velocidade
         self.__posicao = posicao
 
-    
+
     @property
-    def vida(self):
+    def cor(self) -> tuple:
+        return self.__cor
+
+    @property
+    def vida(self) -> int:
         return self.__vida
 
-    @vida.setter
-    def vida(self, vida):
-        self.__vida = vida
-
     @property
-    def vida_maxima(self):
+    def vida_maxima(self) -> int:
         return self.__vida_maxima
 
-    @vida_maxima.setter
-    def vida_maxima(self):
-        pass
-
     @property
-    def dano(self):
-        return self.__dano
-
-    @dano.setter
-    def dano(self):
-        pass
-
-    @property
-    def velocidade(self):
+    def velocidade(self) -> int:
         return self.__velocidade
 
-    @velocidade.setter
-    def velocidade(self):
-        pass
-
     @property
-    def posicao(self):
+    def posicao(self) -> list:
         return self.__posicao
 
+    @property
+    def invulneravel(self) -> bool:
+        return self.__invulneravel
+
+    @property
+    def tempo_inicial_inv(self) -> float:
+        return self.__tempo_inicial_inv
+
+    @property
+    def tempo_inv(self) -> float:
+        return self.__tempo_inv
+
+    @cor.setter
+    def cor(self, nova: tuple):
+        self.__cor = nova
+
+    @tempo_inicial_inv.setter
+    def tempo_inicial_inv(self, novo: float):
+        self.__tempo_inicial_inv = novo
+
+    @tempo_inv.setter
+    def tempo_inv(self, novo: float):
+        self.__tempo_inv = novo
+
+    @invulneravel.setter
+    def invulneravel(self, novo: bool):
+        self.__invulneravel = novo
+
+    @vida.setter
+    def vida(self, vida: int):
+        self.__vida = vida
+
+    @velocidade.setter
+    def velocidade(self, nova: int):
+        self.__velocidade = nova
+
     @posicao.setter
-    def posicao(self):
-        pass
+    def posicao(self, nova):
+        self.__posicao = nova
+
+    # Torna o Personagem invulnerável por um determinado tempo, que, assume 0.5 segundos caso o valor não for especificado
+    def tornar_invulneravel_por(self, tempo_inv=500):
+    
+        self.__tempo_inicial_inv = pygame.time.get_ticks()
+        self.__tempo_inv = tempo_inv
+        self.__invulneravel = True

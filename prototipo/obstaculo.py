@@ -2,37 +2,36 @@ import pygame
 from tela import tela
 
 
-class Obstaculo():
+class Obstaculo(pygame.sprite.Sprite):
 
     def __init__(self, tipo: str, posicao: list, velocidade: int, tamanho: list):
-        self.__tipo = tipo
-        self.posicao_obstaculo = posicao
+        self.__posicao = posicao
         self.__velocidade = velocidade
         self.__tamanho = tamanho
-        self.__retangulo = pygame.Rect(self.posicao_obstaculo[0], self.posicao_obstaculo[1], self.__tamanho[0], self.__tamanho[1])
-        self.__cor = (0, 255, 0)
+        self.__retangulo = pygame.Rect(self.__posicao[0], self.__posicao[1], self.__tamanho[0], self.__tamanho[1])
 
-    def desenhar(self):
-        pygame.draw.rect(tela.screen, self.__cor, self.__retangulo)
-        self.__retangulo = pygame.Rect(self.posicao_obstaculo[0], self.posicao_obstaculo[1], self.__tamanho[0], self.__tamanho[1])
 
-    def checar_colisao(self, jogador):
-        if self.__retangulo.colliderect(jogador.retangulo) and jogador.invulneravel is False:
-            jogador.invulneravel = True
-            jogador.tempo_inicial_inv = pygame.time.get_ticks()
+    @property
+    def velocidade(self):
+        return self.__velocidade
 
-            # perde uma vida e deixa de desenhar um coração na tela
-            jogador.vida -= 1
-            print(jogador.vida)
+    @property
+    def retangulo(self):
+        return self.__retangulo
 
-    def movimento(self, dt, aparecer):
-       self.posicao_obstaculo[0] -= self.__velocidade * dt
-       if self.posicao_obstaculo[0] <= -40:
-           self.posicao_obstaculo[0] = aparecer
+    # movimenta o obstaculo e define a velocidade dele
+    def movimento(self, dt, aparecer: int):
+       self.__posicao[0] -= self.__velocidade * dt
+       if self.__posicao[0] <= -40:
+           self.__posicao[0] = aparecer
            self.__velocidade += 10
 
-    def atualizar(self, dt, jogador):
+    # desenha os obstaculos
+    def desenhar(self):
+            pygame.draw.rect(tela.screen, (0, 255, 0), self.__retangulo)
+            self.__retangulo = pygame.Rect(self.__posicao[0], self.__posicao[1], self.__tamanho[0], self.__tamanho[1])
+
+    # atualiza os obsculos
+    def atualizar(self, dt):
         self.desenhar()
-        self.movimento(dt, 1128)
-        self.movimento(dt, 1328)     # movimento do obstaculo
-        self.checar_colisao(jogador)
+        self.movimento(dt, 1328)
