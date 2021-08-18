@@ -1,6 +1,8 @@
-# quebra-ossos
-Repositório do trabalho
-### [Link do repositorio antigo](https://github.com/anthongretter/quebra-ossos)
+# Quebra-Ossos
+Repositório do trabalho final de POO II
+<br><b>Equipe:</b> Anthon Gretter, Mauricio Konrath, Nicolas Elias, Rian Serena</br>
+
+## [Link do repositorio antigo](https://github.com/anthongretter/quebra-ossos)
 
 ### Como foi implementado
 Implementamos a maior parte via live share do vscode
