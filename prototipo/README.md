@@ -6,7 +6,7 @@ Repositório do trabalho final de POO II
 
 ### Como foi implementado
 Implementamos a maior parte via live share do vscode
-Temos nossa participação via [discord](https://discord.gg/WZ3G9PAzRp) (para caso os professores queiram visualizar nossa discussão)
+<br>Temos nossa participação via [discord](https://discord.gg/WZ3G9PAzRp) (para caso os professores queiram visualizar nossa discussão)</br>
 
 ### Bibliotecas ultilizadas
 * pygame
