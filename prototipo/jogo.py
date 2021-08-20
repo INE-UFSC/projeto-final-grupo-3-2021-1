@@ -61,7 +61,7 @@ class Jogo():
         else:
             font = pygame.font.Font(pygame.font.get_default_font(), 40)
             texto_ossos = font.render("OSSOS QUEBRADOS", True, (255, 255, 255))
-            texto_perdeu = font.render("Perdeu otário, pontuou {:.1f}".format(self.__pontuacao), True, (255, 255, 255))
-            tela.screen.blit(texto_ossos,  (928/4, 600/3))
-            tela.screen.blit(texto_perdeu,  ((928/4)-40, 600/2))
+            texto_perdeu = font.render("GAME OVER, {:.1f} Pontos".format(self.__pontuacao), True, (255, 255, 255))
+            tela.screen.blit(texto_ossos,  (232, 200))
+            tela.screen.blit(texto_perdeu,  (192, 300))
             

@@ -21,7 +21,7 @@ class Sistema:
                             inimigos=[]
                         )
         
-        # loop da janela
+        # loop da janela (loop principal do game)
         while True:
             # delta time é o tempo de um frame
             tempo_final = time.time()
