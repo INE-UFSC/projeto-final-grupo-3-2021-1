@@ -1,12 +1,14 @@
 from personagem import Personagem
 import pygame
 from tela import tela
+from constantes import Constantes
 
 
 class Jogador(Personagem):
 
     def __init__(self):
         super().__init__(vida=3, vida_maxima=3, velocidade=400, posicao=[10,484])
+        self.constantes = Constantes()
         self.__tamanho_pulo = 55
         self.__pulando = False
         self.__velocidade_y = 10
@@ -36,38 +38,38 @@ class Jogador(Personagem):
         # movimento para a esquerda
         if botoes[pygame.K_LEFT]: 
             self.posicao[0] -= self.velocidade * dt
-            if self.posicao[0] < 0:
-                self.posicao[0] = 0
+            if self.posicao[0] < self.constantes.limite_esquerda:
+                self.posicao[0] = self.constantes.limite_esquerda
 
         # movimento para a direita
         if botoes[pygame.K_RIGHT]:
             self.posicao[0] += self.velocidade * dt
-            if self.posicao[0] > 908:
-                self.posicao[0] = 908
+            if self.posicao[0] > self.constantes.limite_direita:
+                self.posicao[0] = self.constantes.limite_direita
 
-        # movimento para cima
+        # movimento pulo
         if self.__pulando is False and botoes[pygame.K_UP]:
             self.__pulando = True
         if self.__pulando:
             self.posicao[1] -= self.__velocidade_y*self.__tamanho_pulo * dt         # tamanho do pulo
-            self.__velocidade_y -= 0.05                                             # velocidade que o jogador cai
+            self.__velocidade_y -= self.constantes.velocidade_pulo                                           # velocidade que o jogador cai
             
             # checa a colisão com o chão
-            if self.posicao[1] >= 484: 
-                self.posicao[1] = 484
+            if self.posicao[1] >= self.constantes.limite_chao: 
+                self.posicao[1] = self.constantes.limite_chao
                 self.__pulando = False
-                self.__velocidade_y = 10
+                self.__velocidade_y = self.constantes.velocidade
 
     # eventos do jogador
     def eventos(self):
         
         # aciona timer se jogador está invulnerável
         if self.invulneravel:
-            self.cor = (0, 0, 255)
+            self.cor = self.constantes.azul
 
             if pygame.time.get_ticks() - self.tempo_inicial_inv >= self.tempo_inv:
                 self.invulneravel = False
-                self.cor = (255, 0, 0)
+                self.cor = self.constantes.vermelho
             
 
     # desenha o jogador e a sua vida
