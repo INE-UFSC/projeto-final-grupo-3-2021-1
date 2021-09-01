@@ -1,8 +1,11 @@
+from pygame import surface
+from pygame.surfarray import blit_array
 from personagem import Personagem
 import pygame
 from tela import tela
 from constantes import Constantes
-from sprites import imagens
+from sprites import todas_as_sprites
+from sprites import cavaleiro
 
 
 class Jogador(Personagem):
@@ -13,19 +16,20 @@ class Jogador(Personagem):
         self.__tamanho_pulo = 55
         self.__velocidade_y = 10
         self.__pulando = False
-        self.__movendo = True
-        self.__sprite_atual = 0
-        self.__imagem = imagens.animacao_jogador_movendo[self.__sprite_atual]
-        self.__rectangulo = self.imagem.get_rect()
-        self.__rectangulo.topleft = (self.posicao[0], self.posicao[1])      # self.__retangulo = pygame.Rect(self.posicao[0], self.posicao[1], 20,50)
+
+        self.__movendo = True 
+        #self.__imagem = cavaleiro.animacao_jogador_movendo[cavaleiro.imagem_atual]
+        self.__rect = cavaleiro.rect
+        cavaleiro.rect.topleft = [self.posicao[0], self.posicao[1]]
+
         self.__desenho_vidas = [pygame.Rect(800, 10, 30, 30),
                                 pygame.Rect(840, 10, 30, 30),
                                 pygame.Rect(880, 10, 30, 30)]
 
 
     @property
-    def retangulo(self):
-        return self.__retangulo
+    def rect(self):
+        return self.__rect
 
     @property
     def desenho_vidas(self):
@@ -36,6 +40,7 @@ class Jogador(Personagem):
     def movimento_direita(self, dt, seta_direita_pressionada):
         if seta_direita_pressionada:
             self.posicao[0] += self.velocidade * dt
+            cavaleiro.rect.topleft = [self.posicao[0], self.posicao[1]]
             if self.posicao[0] > self.constantes.limite_direita:
                 self.posicao[0] = self.constantes.limite_direita
 
@@ -44,6 +49,7 @@ class Jogador(Personagem):
     def movimento_esquerda(self, dt, seta_esquerda_pressionada):
         if seta_esquerda_pressionada: 
             self.posicao[0] -= self.velocidade * dt
+            cavaleiro.rect.topleft = [self.posicao[0], self.posicao[1]]
             if self.posicao[0] < self.constantes.limite_esquerda:
                 self.posicao[0] = self.constantes.limite_esquerda
 
@@ -52,6 +58,7 @@ class Jogador(Personagem):
     def movimento_pulo(self, dt, seta_cima_pressionada):
         if self.__pulando is False and seta_cima_pressionada:
             self.__pulando = True
+            cavaleiro.pulando = True
         if self.__pulando:
             self.posicao[1] -= self.__velocidade_y*self.__tamanho_pulo * dt  # tamanho do pulo
             self.__velocidade_y -= self.constantes.velocidade_queda          # velocidade que o jogador cai
@@ -60,6 +67,8 @@ class Jogador(Personagem):
             if self.posicao[1] >= self.constantes.limite_chao: 
                 self.posicao[1] = self.constantes.limite_chao
                 self.__pulando = False
+                cavaleiro.pulando = False
+                cavaleiro.movendo = True
                 self.__velocidade_y = self.constantes.velocidade
         
 
@@ -85,22 +94,13 @@ class Jogador(Personagem):
 
     # desenha o jogador
     def desenhar(self):
-        pygame.draw.rect(tela.screen, self.cor, self.__retangulo)
-        self.__retangulo = pygame.Rect(self.posicao[0], self.posicao[1], 20,50)
-
-
-    def animacao(self):
-        if self.__movendo:
-            self.__sprite_atual += 1
-        if int(self.proxima_sprite) >= len(imagens.animacao_jogador_movendo):
-            self.self.__sprite_atual = 0
-
-        self.image = imagens.animacao_jogador_movendo[self.__sprite_atual]
+        todas_as_sprites.draw(tela.screen)
+        todas_as_sprites.update()
 
 
     # Função de loop do jogador que entra no loop do jogo
     def atualizar(self, dt):
         self.desenhar()
         self.movimento(dt)
-        self.animacao()
+        # self.animacao()
         self.eventos()

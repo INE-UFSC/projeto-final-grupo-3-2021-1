@@ -26,7 +26,7 @@ class Jogo():
 
         # obstáculos
         for obs in self.__cenario.obstaculos:
-            if self.__jogador.retangulo.colliderect(obs.retangulo) and self.__jogador.invulneravel is False:
+            if self.__jogador.rect.colliderect(obs.retangulo) and self.__jogador.invulneravel is False:
                 self.__jogador.tornar_invulneravel_por()
 
                 # perde uma vida (tira 1 coraçao na tela)
@@ -34,7 +34,7 @@ class Jogo():
 
         # poder
         if self.__cenario.poder_na_tela != None:
-            if self.__jogador.retangulo.colliderect(self.__cenario.poder_na_tela.retangulo):
+            if self.__jogador.rect.colliderect(self.__cenario.poder_na_tela.retangulo):
                 self.__cenario.poder_na_tela.usar(self.__jogador)
                 self.__cenario.poder_na_tela = None
 
