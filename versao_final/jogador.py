@@ -30,25 +30,26 @@ class Jogador(Personagem):
     def tamanho_pulo(self, novo):
         self.__tamanho_pulo = novo
 
-    # movimentos do jogador
-    def movimento(self, dt):
 
-        botoes = pygame.key.get_pressed()
-
-        # movimento para a esquerda
-        if botoes[pygame.K_LEFT]: 
-            self.posicao[0] -= self.velocidade * dt
-            if self.posicao[0] < self.constantes.limite_esquerda:
-                self.posicao[0] = self.constantes.limite_esquerda
-
-        # movimento para a direita
-        if botoes[pygame.K_RIGHT]:
+    # movimento para a direita
+    def movimento_direita(self, dt, seta_direita_pressionada):
+        if seta_direita_pressionada:
             self.posicao[0] += self.velocidade * dt
             if self.posicao[0] > self.constantes.limite_direita:
                 self.posicao[0] = self.constantes.limite_direita
 
-        # movimento pulo
-        if self.__pulando is False and botoes[pygame.K_UP]:
+
+    # movimento para a esquerda
+    def movimento_esquerda(self, dt, seta_esquerda_pressionada):
+        if seta_esquerda_pressionada: 
+            self.posicao[0] -= self.velocidade * dt
+            if self.posicao[0] < self.constantes.limite_esquerda:
+                self.posicao[0] = self.constantes.limite_esquerda
+
+
+    # movimento do pulo
+    def movimento_pulo(self, dt, seta_cima_pressionada):
+        if self.__pulando is False and seta_cima_pressionada:
             self.__pulando = True
         if self.__pulando:
             self.posicao[1] -= self.__velocidade_y*self.__tamanho_pulo * dt  # tamanho do pulo
@@ -59,6 +60,7 @@ class Jogador(Personagem):
                 self.posicao[1] = self.constantes.limite_chao
                 self.__pulando = False
                 self.__velocidade_y = self.constantes.velocidade
+        
 
     # eventos do jogador
     def eventos(self):
@@ -70,18 +72,21 @@ class Jogador(Personagem):
             if pygame.time.get_ticks() - self.tempo_inicial_inv >= self.tempo_inv:
                 self.invulneravel = False
                 self.cor = self.constantes.vermelho
-            
 
-    # desenha o jogador e a sua vida
+
+    # movimentos do jogador
+    def movimento(self, dt):
+        botoes = pygame.key.get_pressed()
+        self.movimento_direita(dt, botoes[pygame.K_RIGHT])
+        self.movimento_esquerda(dt, botoes[pygame.K_LEFT])
+        self.movimento_pulo(dt, botoes[pygame.K_UP])
+
+
+    # desenha o jogador
     def desenhar(self):
-
-        # desenho das vidas (corações)
-        for vida_index in range(self.vida):
-            pygame.draw.rect(tela.screen, (255, 0, 0), self.__desenho_vidas[vida_index])
-
-        # Desenho do jogador
         pygame.draw.rect(tela.screen, self.cor, self.__retangulo)
         self.__retangulo = pygame.Rect(self.posicao[0], self.posicao[1], 20,50)
+
 
     # Função de loop do jogador que entra no loop do jogo
     def atualizar(self, dt):
