@@ -2,6 +2,7 @@ from personagem import Personagem
 import pygame
 from tela import tela
 from constantes import Constantes
+from sprites import imagens
 
 
 class Jogador(Personagem):
@@ -10,9 +11,13 @@ class Jogador(Personagem):
         super().__init__(vida=3, vida_maxima=3, velocidade=400, posicao=[10,484])
         self.constantes = Constantes()
         self.__tamanho_pulo = 55
-        self.__pulando = False
         self.__velocidade_y = 10
-        self.__retangulo = pygame.Rect(self.posicao[0], self.posicao[1], 20,50)
+        self.__pulando = False
+        self.__movendo = True
+        self.__sprite_atual = 0
+        self.__imagem = imagens.animacao_jogador_movendo[self.__sprite_atual]
+        self.__rectangulo = self.imagem.get_rect()
+        self.__rectangulo.topleft = (self.posicao[0], self.posicao[1])      # self.__retangulo = pygame.Rect(self.posicao[0], self.posicao[1], 20,50)
         self.__desenho_vidas = [pygame.Rect(800, 10, 30, 30),
                                 pygame.Rect(840, 10, 30, 30),
                                 pygame.Rect(880, 10, 30, 30)]
@@ -23,12 +28,8 @@ class Jogador(Personagem):
         return self.__retangulo
 
     @property
-    def tamanho_pulo(self):
-        return self.__tamanho_pulo
-
-    @tamanho_pulo.setter
-    def tamanho_pulo(self, novo):
-        self.__tamanho_pulo = novo
+    def desenho_vidas(self):
+        return self.__desenho_vidas
 
 
     # movimento para a direita
@@ -88,8 +89,18 @@ class Jogador(Personagem):
         self.__retangulo = pygame.Rect(self.posicao[0], self.posicao[1], 20,50)
 
 
+    def animacao(self):
+        if self.__movendo:
+            self.__sprite_atual += 1
+        if int(self.proxima_sprite) >= len(imagens.animacao_jogador_movendo):
+            self.self.__sprite_atual = 0
+
+        self.image = imagens.animacao_jogador_movendo[self.__sprite_atual]
+
+
     # Função de loop do jogador que entra no loop do jogo
     def atualizar(self, dt):
         self.desenhar()
         self.movimento(dt)
+        self.animacao()
         self.eventos()
