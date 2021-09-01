@@ -11,23 +11,22 @@ class Sprites(pygame.sprite.Sprite):
                                 pygame.image.load('SPRITES/Cavaleiro/cavaleiro_movimento7.png'),
                                 pygame.image.load('SPRITES/Cavaleiro/cavaleiro_movimento8.png')]
 
-    animacao_golem = [pygame.image.load('SPRITES/Golem/golem1'),
-                        pygame.image.load('SPRITES/Golem/golem2'),
-                        pygame.image.load('SPRITES/Golem/golem3'),
-                        pygame.image.load('SPRITES/Golem/golem4'),
-                        pygame.image.load('SPRITES/Golem/golem5'),
-                        pygame.image.load('SPRITES/Golem/golem6'),
-                        pygame.image.load('SPRITES/Golem/golem7'),
-                        pygame.image.load('SPRITES/Golem/golem8')]
+    animacao_golem = [pygame.image.load('SPRITES/Golem/golem1.png'),
+                        pygame.image.load('SPRITES/Golem/golem2.png'),
+                        pygame.image.load('SPRITES/Golem/golem3.png'),
+                        pygame.image.load('SPRITES/Golem/golem4.png'),
+                        pygame.image.load('SPRITES/Golem/golem5.png'),
+                        pygame.image.load('SPRITES/Golem/golem6.png'),
+                        pygame.image.load('SPRITES/Golem/golem7.png')]
 
-    animacao_morcego = [pygame.image.load('SPRITES/Morcego/morcego_movimento_1'),
-                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1'),
-                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1'),
-                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1'),
-                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1'),
-                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1'),
-                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1'),
-                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1')]
+    animacao_morcego = [pygame.image.load('SPRITES/Morcego/morcego_movimento_1.png'),
+                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1.png'),
+                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1.png'),
+                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1.png'),
+                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1.png'),
+                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1.png'),
+                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1.png'),
+                        pygame.image.load('SPRITES/Morcego/morcego_movimento_1.png')]
     
     sprite_coracao = []
 
