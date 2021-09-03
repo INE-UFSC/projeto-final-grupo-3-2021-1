@@ -1,6 +1,7 @@
 from tela import tela
 from poder import InvPoder, VidaPoder
 from random import choice
+from animacao import EstaticoCoracao
 import pygame
 
 
@@ -12,6 +13,13 @@ class Cenario:
         self.__tempo_invocado = 0           # o tempo em que o ultimo poder foi invocado
         self.__velocidade_acumulada = 0     # velocidade acumulada da aceleração do cenário
         self.__aceleracao = 5
+        self.__coracoes = [pygame.sprite.Group().add(EstaticoCoracao([800, 10])),
+                            pygame.sprite.Group().add(EstaticoCoracao([840, 10])),
+                            pygame.sprite.Group().add(EstaticoCoracao([880, 10]))]
+
+    @property
+    def coracoes(self):
+        return self.__coracoes
 
     @property
     def obstaculos(self):

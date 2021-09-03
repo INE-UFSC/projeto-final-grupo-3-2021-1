@@ -53,7 +53,8 @@ class Jogo():
     # desenho das vidas (corações)
     def desenhar_vidas(self):
         for vida_index in range(self.__jogador.vida):
-            pygame.draw.rect(tela.screen, (255, 0, 0), self.__jogador.desenho_vidas[vida_index])
+            self.__cenario.coracoes[vida_index].draw()
+        #     pygame.draw.rect(tela.screen, (255, 0, 0), self.__jogador.desenho_vidas[vida_index])
 
 
     # Responsável por atualizar tudo dentro do jogo, AKA Update Function

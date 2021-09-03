@@ -4,8 +4,8 @@ from personagem import Personagem
 import pygame
 from tela import tela
 from constantes import Constantes
-from sprites import todas_as_sprites
-from sprites import cavaleiro
+from animacao import todas_as_sprites
+from animacao import cavaleiro
 
 
 class Jogador(Personagem):
@@ -22,18 +22,14 @@ class Jogador(Personagem):
         self.__rect = cavaleiro.rect
         cavaleiro.rect.topleft = [self.posicao[0], self.posicao[1]]
 
-        self.__desenho_vidas = [pygame.Rect(800, 10, 30, 30),
-                                pygame.Rect(840, 10, 30, 30),
-                                pygame.Rect(880, 10, 30, 30)]
-
 
     @property
     def rect(self):
         return self.__rect
 
-    @property
-    def desenho_vidas(self):
-        return self.__desenho_vidas
+    # @property
+    # def desenho_vidas(self):
+    #     return self.__desenho_vidas
 
 
     # movimento para a direita
