@@ -69,11 +69,10 @@ class AnimacaoCavaleiro(Animacao):
 
         self.__sprite_atual_index = 0
         self.__sprite_atual = self.__sprites_jogador_movendo[self.__sprite_atual_index]
-        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (26*2,29*2))
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (26*3,29*3))
 
         self.__rect = self.__sprite_atual.get_rect()
         self.image = self.__sprite_atual
-
 
     @property
     def rect(self):
@@ -83,10 +82,8 @@ class AnimacaoCavaleiro(Animacao):
     def rect(self, rect):
         self.__rect = rect
 
-
     def popular_sprites(self):
         self.__sprites_jogador_movendo, self.__sprites_jogador_pulando = super().pegar_sprites()
-
 
     def update(self, pulando: bool):
         self.__sprite_atual_index += 0.020
@@ -101,21 +98,101 @@ class AnimacaoCavaleiro(Animacao):
                 self.__sprite_atual_index = 0
             self.__sprite_atual = self.__sprites_jogador_pulando[int(self.__sprite_atual_index) - 1]
 
-        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (26*2,29*2))
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (26*3,29*3))
+        self.__rect = self.__sprite_atual.get_rect()
+        self.image = self.__sprite_atual
+
+
+class AnimacaoMorcego(Animacao):
+
+    def __init__(self):
+        super().__init__('versao_final/src/morcego/')
+        self.__sprites_morcego_movendo = []
+        self.popular_sprites()
+
+        self.__sprite_atual_index = 0
+        self.__sprite_atual = self.__sprites_morcego_movendo[self.__sprite_atual_index]
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (29*2,17*2))
+
+        self.__rect = self.__sprite_atual.get_rect()
+        self.image = self.__sprite_atual
+
+        self.__movendo = True
+
+    @property
+    def rect(self):
+        return self.__rect
+
+    @rect.setter
+    def rect(self, rect):
+        self.__rect = rect
+
+    def popular_sprites(self):
+        self.__sprites_morcego_movendo = super().pegar_sprites()
+
+    def update(self):
+        self.__sprite_atual_index += 0.020
+
+        if self.__movendo:
+            if self.__sprite_atual_index >= len(self.__sprites_morcego_movendo):
+                self.__sprite_atual_index = 0
+            self.__sprite_atual = self.__sprites_morcego_movendo[int(self.__sprite_atual_index) - 1] 
+
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (29*2,17*2))
+        self.__rect = self.__sprite_atual.get_rect()
+        self.image = self.__sprite_atual
+
+
+class AnimacaoGolem(Animacao):
+
+    def __init__(self):
+        super().__init__('versao_final/src/golem/')
+        self.__sprites_golem_movendo = []
+        self.popular_sprites()
+
+        self.__sprite_atual_index = 0
+        self.__sprite_atual = self.__sprites_golem_movendo[self.__sprite_atual_index]
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (34*3,38*3))
+
+        self.__rect = self.__sprite_atual.get_rect()
+        self.image = self.__sprite_atual
+
+        self.__movendo = True
+
+    @property
+    def rect(self):
+        return self.__rect
+
+    @rect.setter
+    def rect(self, rect):
+        self.__rect = rect
+
+    def popular_sprites(self):
+        self.__sprites_golem_movendo = super().pegar_sprites()
+
+    def update(self):
+        self.__sprite_atual_index += 0.020
+
+        if self.__movendo:
+            if self.__sprite_atual_index >= len(self.__sprites_golem_movendo):
+                self.__sprite_atual_index = 0
+            self.__sprite_atual = self.__sprites_golem_movendo[int(self.__sprite_atual_index) - 1] 
+
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (34*3,38*3))
         self.__rect = self.__sprite_atual.get_rect()
         self.image = self.__sprite_atual
 
 
 class AnimacaoFundo(Animacao):
 
-    def __init__(self):
-        super().__init__('versao_final/src/backgrounds/')
+    def __init__(self, path: str, posicao_inicial: list):
+        super().__init__(path)
         self.__sprite_fundo = []
         self.popular_sprites()
 
-        self.image = self.__animacao_fundo[0]
+        self.image = self.__sprite_fundo[0]
         self.rect = self.image.get_rect()
-        self.rect.topleft = [464, 300]
+        self.rect.topleft = posicao_inicial
 
         self.jogando = True
 
@@ -123,13 +200,30 @@ class AnimacaoFundo(Animacao):
         self.__sprite_fundo = super().pegar_sprites()
 
     def update(self):
-        if self.jogando:
-            self.rect.topleft[0] += 10
-        if self.rect.topleft[0] <= 464:
-            self.rect.topleft[0] = 0
+        pass
+
+        # if self.jogando:
+        #     print(self.rect.topleft)
+        #     self.rect.topleft[0] += 10
+
+        #     if self.rect.topleft[0] <= 464:
+        #         self.rect.topleft[0] = 0
+
+        #  self.rect = self.image.get_rect()
 
 
 class EstaticoCoracao(pygame.sprite.Sprite):
+
+    def __init__(self, posicao= []):
+        pygame.sprite.Sprite.__init__(self)
+        self.posicao = posicao
+        self.imagem_coracao = pygame.image.load('versao_final/src/estaticos/coracao.png')
+        self.imagem_coracao = pygame.transform.scale(self.imagem_coracao, (17*2,17*2))
+        self.image = self.imagem_coracao
+        self.rect = self.imagem_coracao.get_rect()
+        self.rect.topleft = [self.posicao[0], self.posicao[1]]
+
+class EstaticoPoder(pygame.sprite.Sprite):
 
     def __init__(self, posicao= []):
         pygame.sprite.Sprite.__init__(self)

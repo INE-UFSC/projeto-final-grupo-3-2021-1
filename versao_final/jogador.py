@@ -10,10 +10,10 @@ from animacao import AnimacaoCavaleiro
 class Jogador(Personagem):
 
     def __init__(self):
-        super().__init__(vida=3, vida_maxima=3, velocidade=400, posicao=[10,484])
+        super().__init__(vida=3, vida_maxima=3, velocidade=400, posicao=[10,394])
         self.constantes = Constantes()
         self.__animacao = pygame.sprite.Group(AnimacaoCavaleiro())
-        self.__tamanho_pulo = 55
+        self.__tamanho_pulo = 85
         self.__velocidade_y = 10
 
         self.__pulando = False

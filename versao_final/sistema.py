@@ -16,11 +16,11 @@ class Sistema:
         self.__estado_jogo = "jogando"     # a ser implementado com o menu
         self.__recorde = 0
         self.__jogo = Jogo(jogador=Jogador(),
-                            cenario=Cenario([Obstaculo([928,484], 400, [20,50]),    # Golem
-                                            Obstaculo([1500,440], 465, [25,25])]),  # Mocego
+                            cenario=Cenario([Obstaculo([928,294], 475, "Morcego"),    # Golem
+                                            Obstaculo([1500,367], 380, "Golem")]),    # Mocego
                             inimigos=[]
                         )
-        
+        clock = pygame.time.Clock()
         # loop da janela (loop principal do game)
         while True:
             # delta time é o tempo de um frame
@@ -34,7 +34,8 @@ class Sistema:
                 if event.type == pygame.QUIT:
                     sys.exit()
 
-            
+            clock.tick(500)
+            print(clock.get_fps())
             tela.screen.fill((0, 0, 0))
             self.__jogo.atualizar(dt)
             pygame.display.update()
