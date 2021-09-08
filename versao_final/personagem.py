@@ -1,10 +1,12 @@
 import pygame
+from abc import ABC
 
 
-class Personagem:
+class Personagem(ABC):
 
     def __init__(self, vida, vida_maxima, velocidade, posicao):
         self.__cor = (255, 0, 0)
+        self.__mostrar = True
         self.__vida = vida
         self.__vida_maxima = vida_maxima
         self.__invulneravel = False
@@ -17,6 +19,10 @@ class Personagem:
     @property
     def cor(self) -> tuple:
         return self.__cor
+
+    @property
+    def mostrar(self) -> bool:
+        return self.__mostrar
 
     @property
     def vida(self) -> int:
@@ -49,6 +55,10 @@ class Personagem:
     @cor.setter
     def cor(self, nova: tuple):
         self.__cor = nova
+
+    @mostrar.setter
+    def mostrar(self, mostrar: bool):
+        self.__mostrar = mostrar
 
     @tempo_inicial_inv.setter
     def tempo_inicial_inv(self, novo: float):

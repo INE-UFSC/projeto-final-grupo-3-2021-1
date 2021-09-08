@@ -4,8 +4,7 @@ from personagem import Personagem
 import pygame
 from tela import tela
 from constantes import Constantes
-from animacao import todas_as_sprites
-from animacao import cavaleiro
+from animacao import AnimacaoCavaleiro
 
 
 class Jogador(Personagem):
@@ -13,30 +12,25 @@ class Jogador(Personagem):
     def __init__(self):
         super().__init__(vida=3, vida_maxima=3, velocidade=400, posicao=[10,484])
         self.constantes = Constantes()
+        self.__animacao = pygame.sprite.Group(AnimacaoCavaleiro())
         self.__tamanho_pulo = 55
         self.__velocidade_y = 10
-        self.__pulando = False
 
-        self.__movendo = True 
+        self.__pulando = False
+        
         #self.__imagem = cavaleiro.animacao_jogador_movendo[cavaleiro.imagem_atual]
-        self.__rect = cavaleiro.rect
-        cavaleiro.rect.topleft = [self.posicao[0], self.posicao[1]]
+        self.__rect = self.__animacao.sprites()[0].rect
 
 
     @property
     def rect(self):
         return self.__rect
 
-    # @property
-    # def desenho_vidas(self):
-    #     return self.__desenho_vidas
-
 
     # movimento para a direita
     def movimento_direita(self, dt, seta_direita_pressionada):
         if seta_direita_pressionada:
             self.posicao[0] += self.velocidade * dt
-            cavaleiro.rect.topleft = [self.posicao[0], self.posicao[1]]
             if self.posicao[0] > self.constantes.limite_direita:
                 self.posicao[0] = self.constantes.limite_direita
 
@@ -45,7 +39,6 @@ class Jogador(Personagem):
     def movimento_esquerda(self, dt, seta_esquerda_pressionada):
         if seta_esquerda_pressionada: 
             self.posicao[0] -= self.velocidade * dt
-            cavaleiro.rect.topleft = [self.posicao[0], self.posicao[1]]
             if self.posicao[0] < self.constantes.limite_esquerda:
                 self.posicao[0] = self.constantes.limite_esquerda
 
@@ -54,7 +47,6 @@ class Jogador(Personagem):
     def movimento_pulo(self, dt, seta_cima_pressionada):
         if self.__pulando is False and seta_cima_pressionada:
             self.__pulando = True
-            cavaleiro.pulando = True
         if self.__pulando:
             self.posicao[1] -= self.__velocidade_y*self.__tamanho_pulo * dt  # tamanho do pulo
             self.__velocidade_y -= self.constantes.velocidade_queda          # velocidade que o jogador cai
@@ -62,22 +54,20 @@ class Jogador(Personagem):
             # checa a colisão com o chão
             if self.posicao[1] >= self.constantes.limite_chao: 
                 self.posicao[1] = self.constantes.limite_chao
-                self.__pulando = False
-                cavaleiro.pulando = False
-                cavaleiro.movendo = True
                 self.__velocidade_y = self.constantes.velocidade
+                self.__pulando = False
         
 
     # eventos do jogador
-    def eventos(self):
+    def eventos(self, dt):
         
-        # aciona timer se jogador está invulnerável
+        # aciona timer e oscila desenho se jogador está invulnerável
         if self.invulneravel:
-            self.cor = self.constantes.azul
+            self.mostrar = not self.mostrar
 
             if pygame.time.get_ticks() - self.tempo_inicial_inv >= self.tempo_inv:
                 self.invulneravel = False
-                self.cor = self.constantes.vermelho
+                self.mostrar = True
 
 
     # movimentos do jogador
@@ -90,13 +80,18 @@ class Jogador(Personagem):
 
     # desenha o jogador
     def desenhar(self):
-        todas_as_sprites.draw(tela.screen)
-        todas_as_sprites.update()
+        self.__animacao.sprites()[0].rect.topleft = self.posicao
+        self.__rect = self.__animacao.sprites()[0].rect
+
+        if self.mostrar:
+            self.__animacao.draw(tela.screen)
+        
+        self.__animacao.update(self.__pulando)
 
 
     # Função de loop do jogador que entra no loop do jogo
     def atualizar(self, dt):
-        self.desenhar()
         self.movimento(dt)
-        # self.animacao()
-        self.eventos()
+        self.desenhar()
+        self.eventos(dt)
+

@@ -33,11 +33,16 @@ class Animacao(pygame.sprite.Sprite, abc.ABC):
 
     def __carregar_multiplas(self):
         paths = copy(self.path)
+        aux = True
+
         for path in paths:
             self.path = path
             self.__carregar()
-            self.cache_sprites_aux = copy(self.cache_sprites)
-            self.cache_sprites.clear()
+
+            if aux:
+                self.cache_sprites_aux = copy(self.cache_sprites)
+                self.cache_sprites.clear()
+                aux = False
         
     def pegar_sprites(self):
         if self.cache_sprites_aux != []:
@@ -45,57 +50,77 @@ class Animacao(pygame.sprite.Sprite, abc.ABC):
         else:
             return self.cache_sprites
 
+    @abc.abstractmethod
+    def popular_sprites(self):
+        pass
+
+    @abc.abstractmethod
+    def update(self):
+        pass
+
 
 class AnimacaoCavaleiro(Animacao):
+
     def __init__(self):
         super().__init__(['versao_final/src/cavaleiro/movimento/', 'versao_final/src/cavaleiro/pulo/'])
-        self.__animacao_jogador_movendo = []
-        self.__animacao_jogador_pulando = []
-        self.popular_animacoes()
+        self.__sprites_jogador_movendo = []
+        self.__sprites_jogador_pulando = []
+        self.popular_sprites()
 
-        self.movendo = True
-        self.pulando = False
+        self.__sprite_atual_index = 0
+        self.__sprite_atual = self.__sprites_jogador_movendo[self.__sprite_atual_index]
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (26*2,29*2))
 
-        self.imagem_atual = 0
-        self.image = self.__animacao_jogador_movendo[self.imagem_atual]
-        self.rect = self.image.get_rect()
-        self.rect.topleft = [0, 0]
-
-        self.image = pygame.transform.scale(self.image, (26*2,29*2))
-        
-
-    def popular_animacoes(self):
-        self.__animacao_jogador_movendo, self.__animacao_jogador_pulando = super().pegar_sprites()
+        self.__rect = self.__sprite_atual.get_rect()
+        self.image = self.__sprite_atual
 
 
-    def update(self):
-        if self.movendo:
-            self.imagem_atual += 0.020
-            if self.imagem_atual >= len(self.__animacao_jogador_movendo):
-                self.imagem_atual = 0
-            self.image = self.__animacao_jogador_movendo[int(self.imagem_atual) - 1]
+    @property
+    def rect(self):
+        return self.__rect
 
-        if self.pulando:
-            self.movendo = False
-            self.imagem_atual += 0.020
-            if self.imagem_atual >= len(self.__animacao_jogador_pulando):
-                self.movendo = True
-            self.image = self.__animacao_jogador_pulando[int(self.imagem_atual) - 1]
-        
-        self.image = pygame.transform.scale(self.image, (26*2,29*2))
+    @rect.setter
+    def rect(self, rect):
+        self.__rect = rect
 
-class Fundo(Animacao):
+
+    def popular_sprites(self):
+        self.__sprites_jogador_movendo, self.__sprites_jogador_pulando = super().pegar_sprites()
+
+
+    def update(self, pulando: bool):
+        self.__sprite_atual_index += 0.020
+
+        if not pulando:
+            if self.__sprite_atual_index >= len(self.__sprites_jogador_movendo):
+                self.__sprite_atual_index = 0
+            self.__sprite_atual = self.__sprites_jogador_movendo[int(self.__sprite_atual_index) - 1] 
+
+        if pulando:
+            if self.__sprite_atual_index >= len(self.__sprites_jogador_pulando):
+                self.__sprite_atual_index = 0
+            self.__sprite_atual = self.__sprites_jogador_pulando[int(self.__sprite_atual_index) - 1]
+
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (26*2,29*2))
+        self.__rect = self.__sprite_atual.get_rect()
+        self.image = self.__sprite_atual
+
+
+class AnimacaoFundo(Animacao):
+
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.__path = 'versao_final/src/backgrounds/'
-        self.__animacao_fundo = []
-        self.popular_animacoes()
+        super().__init__('versao_final/src/backgrounds/')
+        self.__sprite_fundo = []
+        self.popular_sprites()
 
         self.image = self.__animacao_fundo[0]
         self.rect = self.image.get_rect()
         self.rect.topleft = [464, 300]
 
         self.jogando = True
+
+    def popular_sprites(self):
+        self.__sprite_fundo = super().pegar_sprites()
 
     def update(self):
         if self.jogando:
@@ -105,16 +130,12 @@ class Fundo(Animacao):
 
 
 class EstaticoCoracao(pygame.sprite.Sprite):
+
     def __init__(self, posicao= []):
         pygame.sprite.Sprite.__init__(self)
         self.posicao = posicao
         self.imagem_coracao = pygame.image.load('versao_final/src/estaticos/coracao.png')
         self.imagem_coracao = pygame.transform.scale(self.imagem_coracao, (17*2,17*2))
+        self.image = self.imagem_coracao
         self.rect = self.imagem_coracao.get_rect()
         self.rect.topleft = [self.posicao[0], self.posicao[1]]
-
-
-todas_as_sprites = pygame.sprite.Group()
-
-cavaleiro = AnimacaoCavaleiro()
-todas_as_sprites.add(cavaleiro)

@@ -53,7 +53,8 @@ class Jogo():
     # desenho das vidas (corações)
     def desenhar_vidas(self):
         for vida_index in range(self.__jogador.vida):
-            self.__cenario.coracoes[vida_index].draw()
+            self.__cenario.coracoes[vida_index].draw(tela.screen)
+            self.__cenario.coracoes[vida_index].update()
         #     pygame.draw.rect(tela.screen, (255, 0, 0), self.__jogador.desenho_vidas[vida_index])
 
 

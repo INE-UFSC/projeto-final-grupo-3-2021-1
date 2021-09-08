@@ -13,9 +13,9 @@ class Cenario:
         self.__tempo_invocado = 0           # o tempo em que o ultimo poder foi invocado
         self.__velocidade_acumulada = 0     # velocidade acumulada da aceleração do cenário
         self.__aceleracao = 5
-        self.__coracoes = [pygame.sprite.Group().add(EstaticoCoracao([800, 10])),
-                            pygame.sprite.Group().add(EstaticoCoracao([840, 10])),
-                            pygame.sprite.Group().add(EstaticoCoracao([880, 10]))]
+        self.__coracoes = [pygame.sprite.Group(coracao) for coracao in [EstaticoCoracao([800, 10]),
+                                                                            EstaticoCoracao([840, 10]), 
+                                                                            EstaticoCoracao([880, 10])]]
 
     @property
     def coracoes(self):
