@@ -13,6 +13,7 @@ class Jogo():
         self.__cenario = cenario            # objeto do cenário
         self.__pontuacao = 0                # pontuação atual do jogo
         self.__constantes = Constantes()
+        self.__final = False
 
     @property
     def jogador(self):
@@ -21,6 +22,10 @@ class Jogo():
     @jogador.setter
     def jogador(self, jogador):
         self.__jogador = jogador
+
+    @property
+    def final(self):
+        return self.__final
 
 
     # checa as colisões entre obstaculos e poderes e o jogador
@@ -71,8 +76,9 @@ class Jogo():
             self.desenhar_vidas()           # desenha as vidas do jogador na tela, com base no número atual de vidas
             self.pontuar(dt)                # pontua jogo e imprime a pontuação
         else:
-            font = self.__constantes.font
-            texto_ossos = font.render("OSSOS QUEBRADOS", True, (255, 255, 255))
-            texto_perdeu = font.render("GAME OVER, {:.1f} Pontos".format(self.__pontuacao), True, (255, 255, 255))
-            tela.screen.blit(texto_ossos,  (232, 200))
-            tela.screen.blit(texto_perdeu,  (182, 300))
+            self.__final = True
+            # font = self.__constantes.font
+            # texto_ossos = font.render("OSSOS QUEBRADOS", True, (255, 255, 255))
+            # texto_perdeu = font.render("GAME OVER, {:.1f} Pontos".format(self.__pontuacao), True, (255, 255, 255))
+            # tela.screen.blit(texto_ossos,  (232, 200))
+            # tela.screen.blit(texto_perdeu,  (182, 300))

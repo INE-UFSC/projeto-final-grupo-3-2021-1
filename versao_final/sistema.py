@@ -3,11 +3,13 @@ from jogador import Jogador
 from tela import tela
 from cenario import Cenario
 from obstaculo import Obstaculo
+from singleton import Singleton
 import pygame
 import sys, time
+import pygame
 
 
-class Sistema:
+class Sistema(Singleton):
 
     def __init__(self):
         pygame.init()
@@ -16,44 +18,160 @@ class Sistema:
         self.__estado_jogo = "jogando"     # a ser implementado com o menu
         self.__recorde = 0
         self.__jogo = Jogo(jogador=Jogador(),
-                            cenario=Cenario([Obstaculo([928,294], 475, "Morcego"),    # Golem
-                                            Obstaculo([1500,367], 380, "Golem")]),    # Mocego
+                            cenario=Cenario([Obstaculo([928,284], 380, "Morcego"),    # Golem 264
+                                            Obstaculo([1300,367], 380, "Golem")]),    # Mocego 1500
                             inimigos=[]
                         )
-        clock = pygame.time.Clock()
-        # loop da janela (loop principal do game)
-        while True:
-            # delta time é o tempo de um frame
-            tempo_final = time.time()
-            dt = tempo_final - tempo_inicial
-            tempo_inicial = tempo_final
-            
 
-            # sai ao clicar no "x"
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
+        self.__click = False
+        self.__fundo_atual = None
+        
+        self.__clock = pygame.time.Clock()
 
-            clock.tick(500)
-            print(clock.get_fps())
-            tela.screen.fill((0, 0, 0))
-            self.__jogo.atualizar(dt)
-            pygame.display.update()
-
-    def eventos(self):
-        pass
 
     @property
     def recorde(self):
         return self.__recorde   # VERIFICAR DEPOIS ESTA IMPLEMENTAÇÃO
+
+    @property
+    def estado_jogo(self):
+        return self.__estado_jogo
+
+    @estado_jogo.setter
+    def estado_jogo(self, novo_estado):
+        self.__estado_jogo = novo_estado
         
     @recorde.setter
     def recorde(self, novo_recorde):
         self.__recorde = novo_recorde
+
+
+    # desenha o atual fundo em cada seção do menu
+    def desenhar_fundo(self):
+        tela.screen.blit(self.__fundo_atual, [0, 0])
+
+    # atualiza o display da janela
+    def atualizar_tela(self):
+        tela.screen.fill((0, 0, 0))
+        pygame.display.update()
+
+    # eventos de input do usuário
+    def eventos(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    self.__click = True
+            else:
+                self.__click = False
+
+
+    def jogando(self):
+        self.__estado_jogo = "jogando"
+            
+        while self.__estado_jogo == "jogado":
+            # delta time é o tempo de um frame
+            tempo_final = time.time()
+            dt = tempo_final - tempo_inicial
+            tempo_inicial = tempo_final
+
+            self.__clock.tick(300)
+            self.__jogo.atualizar(dt)
+            
+            if self.__jogo.final:
+                self.final()
+            
+            self.eventos()
+            self.atualizar_tela()
+            
+            
+    def menu(self):
+        self.__estado_jogo = "menu"
+        self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_inicial.png")
+
+        while self.__estado_jogo == "menu":
+            mx, my = pygame.mouse.get_pos()
+
+            button_jogar = pygame.Rect(50, 100, 200, 50)
+            button_ranking = pygame.Rect(50, 100, 200, 50)
+            button_sair = pygame.Rect(50, 100, 200, 50)
+            
+            if button_jogar.collidepoint((mx, my)):
+                if self.__click:
+                    self.jogando()
+            
+            if button_ranking.collidepoint((mx, my)):
+                if self.__click:
+                    self.raking()
+            
+            if button_sair.collidepoint((mx, my)):
+                if self.__click:
+                    sys.exit()
+
+            
+            self.__clock.tick(300)
+
+            self.eventos()
+            self.desenhar_fundo()
+            self.atualizar_tela()
+            
     
-    def ver_recorde(self):
-        pass    # MUDAR IMPLEMENTAÇÃO COM PYGAME
-    
-    #Define o estado do jogo
-    def estado_jogo(self):
-        pass    # MUDAR IMPLEMENTAÇÃO DEPOIS
+    def ranking(self):
+        self.__estado_jogo = "recorde"
+        self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_ranking.png")
+
+        while self.__estado_jogo == "recorde":
+            mx, my = pygame.mouse.get_pos()
+
+            button_voltar = pygame.Rect(50, 100, 200, 50)
+            
+            if button_voltar.collidepoint((mx, my)):
+                self.menu()
+            
+            self.__clock.tick(300)
+
+            self.eventos()
+            self.desenhar_fundo()
+            self.atualizar_tela()
+
+    def final(self):
+        self.__estado_jogo = "final"
+        self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_final.png")
+
+        font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 32)
+        input_box = pygame.Rect(100, 100, 140, 32)
+        color_inactive = pygame.Color('gray')
+        color_active = pygame.Color('white')
+        color = color_inactive
+        active = False
+        
+        
+        while self.__estado_jogo == "final":
+            mx, my = pygame.mouse.get_pos()
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.__click = True
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # If the user clicked on the input_box rect.
+                    if input_box.collidepoint(event.pos):
+                        # Toggle the active variable.
+                        active = not active
+                    else:
+                        active = False
+                    # Change the current color of the input box.
+                    color = color_active if active else color_inactive
+                if event.type == pygame.KEYDOWN:
+                    if active:
+                        if event.key == pygame.K_RETURN:
+                            # print(text)
+                            text = ''
+                        elif event.key == pygame.K_BACKSPACE:
+                            text = text[:-1]
+                        else:
+                            text += event.unicode
+
+           

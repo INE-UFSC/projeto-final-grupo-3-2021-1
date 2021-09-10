@@ -3,15 +3,18 @@ import abc
 import os
 from copy import copy
 
+from pygame import constants
+from constantes import Constantes
+
 
 """
 to do list (anthon):
-    - Criar uma classe abstrata Animacao que funciona como um DAO para as sprites, para facilitar quando for implementar animações em obstaculos (q inclusive ja fecha com o princípio open-closed)
-    - Instanciar classes provenientes da classe Animacao nas classes correspontes Ex.: AnimacaoCavaleiro() em Jogador
-    - Manipular as classes filhas de Animacao dentro das classes correspondentes, facilita a leitura e o entendimento
+    ✓ - Criar uma classe abstrata Animacao que funciona como um DAO para as sprites, para facilitar quando for implementar animações em obstaculos (q inclusive ja fecha com o princípio open-closed)
+    ✓ - Instanciar classes provenientes da classe Animacao nas classes correspontes Ex.: AnimacaoCavaleiro() em Jogador
+    ✓ - Manipular as classes filhas de Animacao dentro das classes correspondentes, facilita a leitura e o entendimento
     - organizar o projeto em arq. MVC
 """
-
+constante = 0.030
 
 class Animacao(pygame.sprite.Sprite, abc.ABC):
 
@@ -86,7 +89,7 @@ class AnimacaoCavaleiro(Animacao):
         self.__sprites_jogador_movendo, self.__sprites_jogador_pulando = super().pegar_sprites()
 
     def update(self, pulando: bool):
-        self.__sprite_atual_index += 0.020
+        self.__sprite_atual_index += constante
 
         if not pulando:
             if self.__sprite_atual_index >= len(self.__sprites_jogador_movendo):
@@ -131,7 +134,7 @@ class AnimacaoMorcego(Animacao):
         self.__sprites_morcego_movendo = super().pegar_sprites()
 
     def update(self):
-        self.__sprite_atual_index += 0.020
+        self.__sprite_atual_index += constante
 
         if self.__movendo:
             if self.__sprite_atual_index >= len(self.__sprites_morcego_movendo):
@@ -171,7 +174,7 @@ class AnimacaoGolem(Animacao):
         self.__sprites_golem_movendo = super().pegar_sprites()
 
     def update(self):
-        self.__sprite_atual_index += 0.020
+        self.__sprite_atual_index += constante
 
         if self.__movendo:
             if self.__sprite_atual_index >= len(self.__sprites_golem_movendo):
@@ -202,34 +205,24 @@ class AnimacaoFundo(Animacao):
     def update(self):
         pass
 
-        # if self.jogando:
-        #     print(self.rect.topleft)
-        #     self.rect.topleft[0] += 10
 
-        #     if self.rect.topleft[0] <= 464:
-        #         self.rect.topleft[0] = 0
-
-        #  self.rect = self.image.get_rect()
-
-
-class EstaticoCoracao(pygame.sprite.Sprite):
-
-    def __init__(self, posicao= []):
+class Estatico(pygame.sprite.Sprite):
+    def __init__(self, posicao, sprite_path):
         pygame.sprite.Sprite.__init__(self)
         self.posicao = posicao
-        self.imagem_coracao = pygame.image.load('versao_final/src/estaticos/coracao.png')
-        self.imagem_coracao = pygame.transform.scale(self.imagem_coracao, (17*2,17*2))
-        self.image = self.imagem_coracao
-        self.rect = self.imagem_coracao.get_rect()
+        self.imagem = pygame.image.load(sprite_path)
+        self.imagem = pygame.transform.scale(self.imagem, (17*2,17*2))
+        self.image = self.imagem
+        self.rect = self.imagem.get_rect()
         self.rect.topleft = [self.posicao[0], self.posicao[1]]
 
-class EstaticoPoder(pygame.sprite.Sprite):
+class EstaticoCoracao(Estatico):
 
-    def __init__(self, posicao= []):
-        pygame.sprite.Sprite.__init__(self)
-        self.posicao = posicao
-        self.imagem_coracao = pygame.image.load('versao_final/src/estaticos/coracao.png')
-        self.imagem_coracao = pygame.transform.scale(self.imagem_coracao, (17*2,17*2))
-        self.image = self.imagem_coracao
-        self.rect = self.imagem_coracao.get_rect()
-        self.rect.topleft = [self.posicao[0], self.posicao[1]]
+    def __init__(self, posicao):
+        super().__init__(posicao, 'versao_final/src/estaticos/coracao.png')
+
+
+class EstaticoPoder(Estatico):
+
+    def __init__(self, posicao, path):
+        super().__init__(posicao, path)

@@ -1,5 +1,7 @@
 from jogador import Jogador
+from tela import Tela
 from tela import tela
+from animacao import EstaticoPoder
 import pygame
 import abc
 
@@ -7,12 +9,12 @@ import abc
 # Classe base do poder
 class Poder(abc.ABC):
 
-    def __init__(self, diferencial: int, cor: tuple, velocidade: float, posicao: list):
-        self.__cor = cor
+    def __init__(self, diferencial: int, velocidade: float, posicao: list, sprite_path: str):
         self.__diferencial = diferencial
         self.__velocidade = velocidade
         self.__posicao = posicao
         self.__retangulo = pygame.Rect(self.__posicao[0], self.__posicao[1], 10, 10)
+        self.__animacao = pygame.sprite.Group(EstaticoPoder(posicao, sprite_path))
     
 
     @property
@@ -51,8 +53,11 @@ class Poder(abc.ABC):
 
     # desenha os poderes no chao
     def desenhar(self):
-        pygame.draw.rect(tela.screen, self.__cor, self.__retangulo)
-        self.__retangulo = pygame.Rect(self.__posicao[0], self.__posicao[1], 10, 10)
+        self.__animacao.sprites()[0].rect.topleft = self.__posicao
+        self.__retangulo = self.__animacao.sprites()[0].rect
+        self.__animacao.draw(tela.screen)
+        # pygame.draw.rect(Tela().screen, self.__cor, self.__retangulo)
+        # self.__retangulo = pygame.Rect(self.__posicao[0], self.__posicao[1], 10, 10)
 
 
     def atualizar(self, dt):
@@ -64,7 +69,10 @@ class Poder(abc.ABC):
 class VidaPoder(Poder):
     
     def __init__(self, velocidade: float, posicao: list):
-        super().__init__(diferencial=1, cor=(255, 0, 0), velocidade=velocidade, posicao=posicao)
+        super().__init__(diferencial=1,
+                        velocidade=velocidade,
+                        posicao=posicao,
+                        sprite_path='versao_final/src/estaticos/pocao_vida.png')
 
     def usar(self, jogador: Jogador):
         if jogador.vida != jogador.vida_maxima:
@@ -75,7 +83,10 @@ class VidaPoder(Poder):
 class InvPoder(Poder):
 
     def __init__(self, velocidade: float, posicao: list):
-        super().__init__(diferencial=3000, cor=(0, 0, 255), velocidade=velocidade, posicao=posicao)
+        super().__init__(diferencial=3000,
+                        velocidade=velocidade,
+                        posicao=posicao,
+                        sprite_path='versao_final/src/estaticos/pocao_inv.png')
 
     def usar(self, jogador: Jogador):
         jogador.tornar_invulneravel_por(self.diferencial)

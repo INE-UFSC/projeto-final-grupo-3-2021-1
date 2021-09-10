@@ -60,5 +60,5 @@ class Obstaculo(pygame.sprite.Sprite):
     # atualiza os obsculos
     def atualizar(self, dt):
         self.desenhar()
-        self.movimento(dt, 1328)
+        self.movimento(dt, 1228)
 
