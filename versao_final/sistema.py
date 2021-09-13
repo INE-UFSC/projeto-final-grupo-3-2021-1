@@ -9,14 +9,20 @@ import sys, time
 import pygame
 
 
+""" to do list:
+        - mover toda a lógica de desenho e apresentação de informações para a view
+        - achar um jeito melhor para fazer a lógica de estados (código muito repetitivo)
+        - ajeitar botões
+        ✓ - desenho dos backgrounds
+"""
+
+
 class Sistema(Singleton):
 
     def __init__(self):
         pygame.init()
-        tempo_inicial = time.time()
-
-        self.__estado_jogo = "jogando"     # a ser implementado com o menu
-        self.__recorde = 0
+        self.__estado_jogo = None     # a ser implementado com o menu
+        self.__recorde = 0            # implementar com o DAO
         self.__jogo = Jogo(jogador=Jogador(),
                             cenario=Cenario([Obstaculo([928,284], 380, "Morcego"),    # Golem 264
                                             Obstaculo([1300,367], 380, "Golem")]),    # Mocego 1500
@@ -25,8 +31,9 @@ class Sistema(Singleton):
 
         self.__click = False
         self.__fundo_atual = None
-        
         self.__clock = pygame.time.Clock()
+
+        self.menu()
 
 
     @property
@@ -48,15 +55,15 @@ class Sistema(Singleton):
 
     # desenha o atual fundo em cada seção do menu
     def desenhar_fundo(self):
-        tela.screen.blit(self.__fundo_atual, [0, 0])
+        tela.screen.blit(self.__fundo_atual, self.__fundo_atual.get_rect())
 
     # atualiza o display da janela
     def atualizar_tela(self):
-        tela.screen.fill((0, 0, 0))
         pygame.display.update()
+        tela.screen.fill((0, 0, 0))
 
     # eventos de input do usuário
-    def eventos(self):
+    def checar_eventos(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -66,11 +73,13 @@ class Sistema(Singleton):
             else:
                 self.__click = False
 
-
+    # estado 
     def jogando(self):
         self.__estado_jogo = "jogando"
+        tempo_inicial = time.time()
             
         while self.__estado_jogo == "jogado":
+
             # delta time é o tempo de um frame
             tempo_final = time.time()
             dt = tempo_final - tempo_inicial
@@ -82,7 +91,7 @@ class Sistema(Singleton):
             if self.__jogo.final:
                 self.final()
             
-            self.eventos()
+            self.checar_eventos()
             self.atualizar_tela()
             
             
@@ -112,7 +121,7 @@ class Sistema(Singleton):
             
             self.__clock.tick(300)
 
-            self.eventos()
+            self.checar_eventos()
             self.desenhar_fundo()
             self.atualizar_tela()
             
@@ -131,7 +140,7 @@ class Sistema(Singleton):
             
             self.__clock.tick(300)
 
-            self.eventos()
+            self.checar_eventos()
             self.desenhar_fundo()
             self.atualizar_tela()
 
