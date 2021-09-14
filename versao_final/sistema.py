@@ -78,7 +78,7 @@ class Sistema(Singleton):
         self.__estado_jogo = "jogando"
         tempo_inicial = time.time()
             
-        while self.__estado_jogo == "jogado":
+        while self.__estado_jogo == "jogando":
 
             # delta time é o tempo de um frame
             tempo_final = time.time()
@@ -102,9 +102,9 @@ class Sistema(Singleton):
         while self.__estado_jogo == "menu":
             mx, my = pygame.mouse.get_pos()
 
-            button_jogar = pygame.Rect(50, 100, 200, 50)
-            button_ranking = pygame.Rect(50, 100, 200, 50)
-            button_sair = pygame.Rect(50, 100, 200, 50)
+            button_jogar = pygame.Rect(40, 180, 374 , 94)
+            button_ranking = pygame.Rect(40, 280, 374 , 94)
+            button_sair = pygame.Rect(40, 380, 374 , 94)
             
             if button_jogar.collidepoint((mx, my)):
                 if self.__click:
@@ -112,7 +112,7 @@ class Sistema(Singleton):
             
             if button_ranking.collidepoint((mx, my)):
                 if self.__click:
-                    self.raking()
+                    self.ranking()
             
             if button_sair.collidepoint((mx, my)):
                 if self.__click:
@@ -127,16 +127,17 @@ class Sistema(Singleton):
             
     
     def ranking(self):
-        self.__estado_jogo = "recorde"
+        self.__estado_jogo = "ranking"
         self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_ranking.png")
 
-        while self.__estado_jogo == "recorde":
+        while self.__estado_jogo == "ranking":
             mx, my = pygame.mouse.get_pos()
 
-            button_voltar = pygame.Rect(50, 100, 200, 50)
+            button_voltar = pygame.Rect(20, 500, 224 , 74)
             
             if button_voltar.collidepoint((mx, my)):
-                self.menu()
+                if self.__click:
+                    self.menu()
             
             self.__clock.tick(300)
 
