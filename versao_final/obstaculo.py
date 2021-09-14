@@ -9,8 +9,7 @@ class Obstaculo(pygame.sprite.Sprite):
         self.__posicao = posicao
         self.__velocidade = velocidade
         self.__tipo = tipo
-        # self.__retangulo = pygame.Rect(self.__posicao[0], self.__posicao[1], self.__tamanho[0], self.__tamanho[1])
-
+        
         self.__animacao_morcego = pygame.sprite.Group(AnimacaoMorcego())
         self.rect_morcego = self.__animacao_morcego.sprites()[0].rect
 
@@ -39,6 +38,7 @@ class Obstaculo(pygame.sprite.Sprite):
        self.__posicao[0] -= self.__velocidade * dt
        if self.__posicao[0] <= -80:
            self.__posicao[0] = aparecer
+        #    self.__velocidade += 10
 
     # desenha os obstaculos
     def desenhar(self):

@@ -4,6 +4,7 @@ from tela import tela
 from cenario import Cenario
 from obstaculo import Obstaculo
 from singleton import Singleton
+from DAO.rankingDAO import RankingDAO
 import pygame
 import sys, time
 import pygame
@@ -12,7 +13,7 @@ import pygame
 """ to do list:
         - mover toda a lógica de desenho e apresentação de informações para a view
         - achar um jeito melhor para fazer a lógica de estados (código muito repetitivo)
-        - ajeitar botões
+        ✓ - ajeitar botões
         ✓ - desenho dos backgrounds
 """
 
@@ -22,12 +23,9 @@ class Sistema(Singleton):
     def __init__(self):
         pygame.init()
         self.__estado_jogo = None     # a ser implementado com o menu
-        self.__recorde = 0            # implementar com o DAO
-        self.__jogo = Jogo(jogador=Jogador(),
-                            cenario=Cenario([Obstaculo([928,284], 380, "Morcego"),    # Golem 264
-                                            Obstaculo([1300,367], 380, "Golem")]),    # Mocego 1500
-                            inimigos=[]
-                        )
+        self.__ranking_dao = RankingDAO()
+        self.__ranking = {}
+        self.__jogo = Jogo()
 
         self.__click = False
         self.__fundo_atual = None
@@ -51,6 +49,10 @@ class Sistema(Singleton):
     @recorde.setter
     def recorde(self, novo_recorde):
         self.__recorde = novo_recorde
+
+    # salva a pontuacao
+    def salvar(self):
+        pass
 
 
     # desenha o atual fundo em cada seção do menu
@@ -89,6 +91,7 @@ class Sistema(Singleton):
             self.__jogo.atualizar(dt)
             
             if self.__jogo.final:
+                print("morreu")
                 self.final()
             
             self.checar_eventos()
@@ -149,13 +152,14 @@ class Sistema(Singleton):
         self.__estado_jogo = "final"
         self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_final.png")
 
-        font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 32)
-        input_box = pygame.Rect(100, 100, 140, 32)
-        color_inactive = pygame.Color('gray')
-        color_active = pygame.Color('white')
+        font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 16)
+        button_salvar = pygame.Rect(705, 510, 210, 74)
+        input_box = pygame.Rect(550, 172, 274, 40)
+        color_inactive = pygame.Color('white')
+        color_active = pygame.Color('gray')
         color = color_inactive
         active = False
-        
+        text = ''
         
         while self.__estado_jogo == "final":
             mx, my = pygame.mouse.get_pos()
@@ -183,5 +187,22 @@ class Sistema(Singleton):
                             text = text[:-1]
                         else:
                             text += event.unicode
+                
+                if button_salvar.collidepoint((mx, my)):
+                    if self.__click:
+                        del self.__jogo
+                        self.__jogo = Jogo()
+                        print(self.__jogo.final)
+                        self.menu()
+                        """implementar self.salvar() para atualizar ranking"""
 
-           
+            self.desenhar_fundo()
+
+            txt_surface = font.render(text, True, color)
+            txt_pontuacao = font.render("{:.1f}".format(self.__jogo.pontuacao), True, pygame.Color("white"))
+            tela.screen.blit(txt_surface, (input_box.x+5, input_box.y+10))
+            tela.screen.blit(txt_pontuacao, (450, 238))
+            pygame.draw.rect(tela.screen, color, input_box, 2)
+            
+            self.checar_eventos()
+            self.atualizar_tela()

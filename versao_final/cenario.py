@@ -54,6 +54,7 @@ class Cenario:
     # acelera todos os objetos do cenário (obstáculos e poderes)
     def acelerar(self):
         if self.obstaculos[0].posicao[0] <= -39:
+            print(self.__velocidade_acumulada)
             for obs in self.__obstaculos:
                 obs.velocidade += self.__aceleracao
             self.__velocidade_acumulada += self.__aceleracao
@@ -84,6 +85,7 @@ class Cenario:
 
     def atualizar(self, dt):
         self.desenhar()
+        # self.acelerar()
         self.mover_cenario(dt)
         self.invocador(dt)
 

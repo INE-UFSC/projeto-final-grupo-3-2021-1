@@ -1,5 +1,6 @@
 from jogador import Jogador
 from cenario import Cenario
+from obstaculo import Obstaculo
 from tela import tela
 import pygame
 from constantes import Constantes
@@ -7,9 +8,9 @@ from constantes import Constantes
 
 class Jogo():
 
-    def __init__(self, jogador: Jogador, cenario: Cenario, inimigos: list):
-        self.__jogador = jogador            # objeto do jogador
-        self.__inimigos = inimigos          # lista de objetos dos inimigos na tela
+    def __init__(self, cenario=Cenario([Obstaculo([928,330], 380, "Morcego"), Obstaculo([1300,400], 380, "Golem")])):
+
+        self.__jogador = Jogador()            # objeto do jogador
         self.__cenario = cenario            # objeto do cenário
         self.__pontuacao = 0                # pontuação atual do jogo
         self.__constantes = Constantes()
@@ -26,6 +27,14 @@ class Jogo():
     @property
     def final(self):
         return self.__final
+
+    @final.setter
+    def final(self, final):
+        self.__final = final
+
+    @property
+    def pontuacao(self):
+        return self.__pontuacao
 
 
     # checa as colisões entre obstaculos e poderes e o jogador
@@ -55,7 +64,7 @@ class Jogo():
         self.__pontuacao += dt * (sum([obs.velocidade for obs in self.__cenario.obstaculos])) / 100
 
         # mostra na tela a pontuação
-        font = self.__constantes.font
+        font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 16)
         text_surface = font.render("{:.1f}".format(self.__pontuacao), True, (255, 255, 255))
         tela.screen.blit(text_surface, (10, 10))
 
@@ -77,8 +86,3 @@ class Jogo():
             self.pontuar(dt)                # pontua jogo e imprime a pontuação
         else:
             self.__final = True
-            # font = self.__constantes.font
-            # texto_ossos = font.render("OSSOS QUEBRADOS", True, (255, 255, 255))
-            # texto_perdeu = font.render("GAME OVER, {:.1f} Pontos".format(self.__pontuacao), True, (255, 255, 255))
-            # tela.screen.blit(texto_ossos,  (232, 200))
-            # tela.screen.blit(texto_perdeu,  (182, 300))

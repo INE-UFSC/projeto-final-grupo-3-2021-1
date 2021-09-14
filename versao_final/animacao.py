@@ -72,7 +72,7 @@ class AnimacaoCavaleiro(Animacao):
 
         self.__sprite_atual_index = 0
         self.__sprite_atual = self.__sprites_jogador_movendo[self.__sprite_atual_index]
-        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (26*3,29*3))
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (26*2,29*2))
 
         self.__rect = self.__sprite_atual.get_rect()
         self.image = self.__sprite_atual
@@ -101,7 +101,7 @@ class AnimacaoCavaleiro(Animacao):
                 self.__sprite_atual_index = 0
             self.__sprite_atual = self.__sprites_jogador_pulando[int(self.__sprite_atual_index) - 1]
 
-        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (26*3,29*3))
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (26*2,29*2))
         self.__rect = self.__sprite_atual.get_rect()
         self.image = self.__sprite_atual
 
@@ -155,7 +155,7 @@ class AnimacaoGolem(Animacao):
 
         self.__sprite_atual_index = 0
         self.__sprite_atual = self.__sprites_golem_movendo[self.__sprite_atual_index]
-        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (34*3,38*3))
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (34*2,38*2))
 
         self.__rect = self.__sprite_atual.get_rect()
         self.image = self.__sprite_atual
@@ -181,7 +181,7 @@ class AnimacaoGolem(Animacao):
                 self.__sprite_atual_index = 0
             self.__sprite_atual = self.__sprites_golem_movendo[int(self.__sprite_atual_index) - 1] 
 
-        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (34*3,38*3))
+        self.__sprite_atual = pygame.transform.scale(self.__sprite_atual, (34*2,38*2))
         self.__rect = self.__sprite_atual.get_rect()
         self.image = self.__sprite_atual
 
@@ -207,11 +207,11 @@ class AnimacaoFundo(Animacao):
 
 
 class Estatico(pygame.sprite.Sprite):
-    def __init__(self, posicao, sprite_path):
+    def __init__(self, posicao, sprite_path, escala):
         pygame.sprite.Sprite.__init__(self)
         self.posicao = posicao
         self.imagem = pygame.image.load(sprite_path)
-        self.imagem = pygame.transform.scale(self.imagem, (17*2,17*2))
+        self.imagem = pygame.transform.scale(self.imagem, (17*escala,17*escala))
         self.image = self.imagem
         self.rect = self.imagem.get_rect()
         self.rect.topleft = [self.posicao[0], self.posicao[1]]
@@ -219,10 +219,10 @@ class Estatico(pygame.sprite.Sprite):
 class EstaticoCoracao(Estatico):
 
     def __init__(self, posicao):
-        super().__init__(posicao, 'versao_final/src/estaticos/coracao.png')
+        super().__init__(posicao, 'versao_final/src/estaticos/coracao.png', 2)
 
 
 class EstaticoPoder(Estatico):
 
     def __init__(self, posicao, path):
-        super().__init__(posicao, path)
+        super().__init__(posicao, path, 1)
