@@ -9,11 +9,9 @@ from constantes import Constantes
 class Jogo():
 
     def __init__(self, cenario=Cenario([Obstaculo([928,330], 380, "Morcego"), Obstaculo([1300,400], 380, "Golem")])):
-
-        self.__jogador = Jogador()            # objeto do jogador
+        self.__jogador = Jogador()          # objeto do jogador
         self.__cenario = cenario            # objeto do cenário
         self.__pontuacao = 0                # pontuação atual do jogo
-        self.__constantes = Constantes()
         self.__final = False
 
     @property
@@ -42,11 +40,9 @@ class Jogo():
 
         # obstáculos
         for obs in self.__cenario.obstaculos:
-            if self.__jogador.rect.colliderect(obs.rect_golem) and self.__jogador.invulneravel is False:
-                self.__jogador.tornar_invulneravel_por()
-                # perde uma vida (tira 1 coraçao na tela)
-                self.__jogador.vida -= 1
-            if self.__jogador.rect.colliderect(obs.rect_morcego) and self.__jogador.invulneravel is False:
+            if (self.__jogador.rect.colliderect(obs.rect_golem) or
+                self.__jogador.rect.colliderect(obs.rect_morcego)) and self.__jogador.invulneravel is False:
+
                 self.__jogador.tornar_invulneravel_por()
                 # perde uma vida (tira 1 coraçao na tela)
                 self.__jogador.vida -= 1

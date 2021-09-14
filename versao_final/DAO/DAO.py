@@ -27,5 +27,9 @@ class DAO(ABC):
             self.fonte = fonte
             self.__load()
 
+    def add(self, key, obj):
+        self.cache[key] = obj
+        self.__dump()
+
     def get_all(self):
-        return self.cache
+        return self.cache.items()

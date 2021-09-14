@@ -22,10 +22,10 @@ class Sistema(Singleton):
 
     def __init__(self):
         pygame.init()
-        self.__estado_jogo = None     # a ser implementado com o menu
+        self.__jogo = Jogo()
+        self.__estado = None           # estado da janela
         self.__ranking_dao = RankingDAO()
         self.__ranking = {}
-        self.__jogo = Jogo()
 
         self.__click = False
         self.__fundo_atual = None
@@ -40,29 +40,38 @@ class Sistema(Singleton):
 
     @property
     def estado_jogo(self):
-        return self.__estado_jogo
+        return self.__estado
 
     @estado_jogo.setter
     def estado_jogo(self, novo_estado):
-        self.__estado_jogo = novo_estado
+        self.__estado = novo_estado
         
     @recorde.setter
     def recorde(self, novo_recorde):
         self.__recorde = novo_recorde
 
+
+    # def pegar_posicoes(self):
+    #     ordenar_ranking = lambda item: item[1]
+    #     ranking = self.__ranking_dao.get_all()
+    #     ranking = sorted(ranking, key=ordenar_ranking, reverse=True)
+        
+
     # salva a pontuacao
-    def salvar(self):
-        pass
+    def salvar(self, nome: str, pontuacao: float):
+        self.__ranking_dao.add(nome, pontuacao)
 
 
     # desenha o atual fundo em cada seção do menu
     def desenhar_fundo(self):
         tela.screen.blit(self.__fundo_atual, self.__fundo_atual.get_rect())
 
+
     # atualiza o display da janela
     def atualizar_tela(self):
         pygame.display.update()
         tela.screen.fill((0, 0, 0))
+
 
     # eventos de input do usuário
     def checar_eventos(self):
@@ -75,12 +84,12 @@ class Sistema(Singleton):
             else:
                 self.__click = False
 
-    # estado 
+
     def jogando(self):
-        self.__estado_jogo = "jogando"
+        self.__estado = "jogando"
         tempo_inicial = time.time()
             
-        while self.__estado_jogo == "jogando":
+        while self.__estado == "jogando":
 
             # delta time é o tempo de um frame
             tempo_final = time.time()
@@ -91,7 +100,6 @@ class Sistema(Singleton):
             self.__jogo.atualizar(dt)
             
             if self.__jogo.final:
-                print("morreu")
                 self.final()
             
             self.checar_eventos()
@@ -99,57 +107,49 @@ class Sistema(Singleton):
             
             
     def menu(self):
-        self.__estado_jogo = "menu"
+        self.__estado = "menu"
         self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_inicial.png")
 
-        while self.__estado_jogo == "menu":
+        while self.__estado == "menu":
             mx, my = pygame.mouse.get_pos()
 
             button_jogar = pygame.Rect(40, 180, 374 , 94)
             button_ranking = pygame.Rect(40, 280, 374 , 94)
             button_sair = pygame.Rect(40, 380, 374 , 94)
             
-            if button_jogar.collidepoint((mx, my)):
-                if self.__click:
-                    self.jogando()
+            if self.__click:
+                for bttn in [button_jogar, button_ranking, button_sair]:
+                    if bttn.collidepoint((mx, my)):
+                        if bttn == button_jogar:
+                            self.jogando()
+                        elif bttn == button_ranking:
+                            self.ranking()
+                        elif bttn == button_sair:
+                            sys.exit()
             
-            if button_ranking.collidepoint((mx, my)):
-                if self.__click:
-                    self.ranking()
-            
-            if button_sair.collidepoint((mx, my)):
-                if self.__click:
-                    sys.exit()
-
-            
-            self.__clock.tick(300)
-
             self.checar_eventos()
             self.desenhar_fundo()
             self.atualizar_tela()
             
     
     def ranking(self):
-        self.__estado_jogo = "ranking"
+        self.__estado = "ranking"
         self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_ranking.png")
 
-        while self.__estado_jogo == "ranking":
+        while self.__estado == "ranking":
             mx, my = pygame.mouse.get_pos()
 
             button_voltar = pygame.Rect(20, 500, 224 , 74)
             
-            if button_voltar.collidepoint((mx, my)):
-                if self.__click:
-                    self.menu()
+            if self.__click and button_voltar.collidepoint((mx, my)):
+                self.menu()
             
-            self.__clock.tick(300)
-
             self.checar_eventos()
             self.desenhar_fundo()
             self.atualizar_tela()
 
     def final(self):
-        self.__estado_jogo = "final"
+        self.__estado = "final"
         self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_final.png")
 
         font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 16)
@@ -161,7 +161,7 @@ class Sistema(Singleton):
         active = False
         text = ''
         
-        while self.__estado_jogo == "final":
+        while self.__estado == "final":
             mx, my = pygame.mouse.get_pos()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -190,9 +190,9 @@ class Sistema(Singleton):
                 
                 if button_salvar.collidepoint((mx, my)):
                     if self.__click:
+                        self.salvar(text, self.__jogo.pontuacao)
                         del self.__jogo
                         self.__jogo = Jogo()
-                        print(self.__jogo.final)
                         self.menu()
                         """implementar self.salvar() para atualizar ranking"""
 
