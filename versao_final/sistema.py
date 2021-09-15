@@ -1,18 +1,16 @@
 from jogo import Jogo
-from jogador import Jogador
 from tela import tela
-from cenario import Cenario
-from obstaculo import Obstaculo
 from singleton import Singleton
-from DAO.rankingDAO import RankingDAO
+from DAO.pontuacoesDAO import PontuacoesDAO
 import pygame
 import sys, time
 import pygame
 from pygame import mixer
 
+
 """ to do list:
-        - mover toda a lógica de desenho e apresentação de informações para a view
-        - achar um jeito melhor para fazer a lógica de estados (código muito repetitivo)
+        -> mover toda a lógica de desenho e apresentação de informações para a view
+        -> achar um jeito melhor para fazer a lógica de estados (código muito repetitivo)
         ✓ - ajeitar botões
         ✓ - desenho dos backgrounds
 """
@@ -21,13 +19,13 @@ from pygame import mixer
 class Sistema(Singleton):
 
     def __init__(self):
-        pygame.init()
-        self.__jogo = Jogo()
-        self.__estado = None           # estado da janela
-        self.__ranking_dao = RankingDAO()
-        self.__ranking = {}
+        pygame.init()   
+        self.__jogo = Jogo()                        # objeto do jogo
+        self.__pontuacoes_dao = PontuacoesDAO()     # DAO das pontuacoes
+        self.__ranking = {}                         # ranking das pontuacoes
 
-        self.__click = False
+        self.__estado = None                        # estado da janela
+        self.__click = False                        # interação do usuário com a janela
         self.__fundo_atual = None
         self.__clock = pygame.time.Clock()
 
@@ -51,15 +49,16 @@ class Sistema(Singleton):
         self.__recorde = novo_recorde
 
 
-    # def pegar_posicoes(self):
-    #     ordenar_ranking = lambda item: item[1]
-    #     ranking = self.__ranking_dao.get_all()
-    #     ranking = sorted(ranking, key=ordenar_ranking, reverse=True)
-        
+    def atualizar_posicoes(self):
+        ordenar_ranking = lambda item: item[1]
+        self.__ranking = self.__pontuacoes_dao.get_all()
+        self.__ranking = sorted(self.__ranking, key=ordenar_ranking, reverse=True)
+
 
     # salva a pontuacao
     def salvar(self, nome: str, pontuacao: float):
-        self.__ranking_dao.add(nome, pontuacao)
+        self.__pontuacoes_dao.add(nome, pontuacao)
+        self.atualizar_posicoes()
 
 
     # desenha o atual fundo em cada seção do menu
@@ -143,17 +142,26 @@ class Sistema(Singleton):
     def ranking(self):
         self.__estado = "ranking"
         self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_ranking.png")
+        self.atualizar_posicoes()
+
+        font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 20)
+        texto_ranks = [font.render(f"{i+1} - {self.__ranking[i][0]}:"+"{:.1f}".format(self.__ranking[i][1]), True, pygame.Color('white')) for i in range(len(self.__ranking))]
+        button_voltar = pygame.Rect(20, 500, 224 , 74)
+
 
         while self.__estado == "ranking":
+            self.desenhar_fundo()
             mx, my = pygame.mouse.get_pos()
 
-            button_voltar = pygame.Rect(20, 500, 224 , 74)
-            
+            posicao_y = 170
+            for text in texto_ranks:
+                tela.screen.blit(text, (310, posicao_y))
+                posicao_y += 30
+
             if self.__click and button_voltar.collidepoint((mx, my)):
                 self.menu()
             
             self.checar_eventos()
-            self.desenhar_fundo()
             self.atualizar_tela()
 
     def final(self):
@@ -206,7 +214,6 @@ class Sistema(Singleton):
                         del self.__jogo
                         self.__jogo = Jogo()
                         self.menu()
-                        """implementar self.salvar() para atualizar ranking"""
 
             self.desenhar_fundo()
 

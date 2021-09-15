@@ -1,10 +1,10 @@
 from DAO.DAO import DAO
 
 
-class RankingDAO(DAO):
+class PontuacoesDAO(DAO):
 
     def __init__(self):
-        super().__init__('versao_final/src/ranking.json')
+        super().__init__('versao_final/src/pontuacoes.json')
 
     def add(self, key=None, value=None, ranks=None):
         if isinstance(key, str) and isinstance(value, float) and ranks is None:
