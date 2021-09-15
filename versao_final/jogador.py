@@ -5,7 +5,7 @@ import pygame
 from tela import tela
 from constantes import Constantes
 from animacao import AnimacaoCavaleiro
-
+from pygame import mixer
 
 class Jogador(Personagem):
 
@@ -60,11 +60,10 @@ class Jogador(Personagem):
 
     # eventos do jogador
     def eventos(self, dt):
-        
         # aciona timer e oscila desenho se jogador está invulnerável
-        if self.invulneravel:
+        if self.invulneravel:            
             self.mostrar = not self.mostrar
-
+            
             if pygame.time.get_ticks() - self.tempo_inicial_inv >= self.tempo_inv:
                 self.invulneravel = False
                 self.mostrar = True

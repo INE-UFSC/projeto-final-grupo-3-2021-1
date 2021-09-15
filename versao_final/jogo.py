@@ -42,16 +42,22 @@ class Jogo():
         for obs in self.__cenario.obstaculos:
             if (self.__jogador.rect.colliderect(obs.rect_golem) or
                 self.__jogador.rect.colliderect(obs.rect_morcego)) and self.__jogador.invulneravel is False:
-
+                
                 self.__jogador.tornar_invulneravel_por()
                 # perde uma vida (tira 1 coraçao na tela)
                 self.__jogador.vida -= 1
+                hit = mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.mp3')
+                hit.play()
+                
+                
 
         # poder
         if self.__cenario.poder_na_tela != None:
             if self.__jogador.rect.colliderect(self.__cenario.poder_na_tela.retangulo):
                 self.__cenario.poder_na_tela.usar(self.__jogador)
                 self.__cenario.poder_na_tela = None
+                power = mixer.Sound('versao_final/src/efeitos_sonoros/vida.mp3')
+                power.play()
 
 
 

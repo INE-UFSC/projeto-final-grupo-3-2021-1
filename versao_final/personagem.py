@@ -1,6 +1,6 @@
 import pygame
 from abc import ABC
-
+from pygame import mixer
 
 class Personagem(ABC):
 
@@ -89,3 +89,4 @@ class Personagem(ABC):
         self.__tempo_inicial_inv = pygame.time.get_ticks()
         self.__tempo_inv = tempo_inv
         self.__invulneravel = True
+        
