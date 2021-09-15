@@ -4,7 +4,7 @@ from obstaculo import Obstaculo
 from tela import tela
 import pygame
 from constantes import Constantes
-
+from pygame import mixer
 
 class Jogo():
 
@@ -52,6 +52,7 @@ class Jogo():
             if self.__jogador.rect.colliderect(self.__cenario.poder_na_tela.retangulo):
                 self.__cenario.poder_na_tela.usar(self.__jogador)
                 self.__cenario.poder_na_tela = None
+
 
 
     # Pontua e mostra a pontuação com base no tempo de jogo e na velocidade dos obstaculos

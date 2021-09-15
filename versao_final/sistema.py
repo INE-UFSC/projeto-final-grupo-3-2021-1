@@ -8,7 +8,7 @@ from DAO.rankingDAO import RankingDAO
 import pygame
 import sys, time
 import pygame
-
+from pygame import mixer
 
 """ to do list:
         - mover toda a lógica de desenho e apresentação de informações para a view
@@ -88,7 +88,11 @@ class Sistema(Singleton):
     def jogando(self):
         self.__estado = "jogando"
         tempo_inicial = time.time()
-            
+
+        mixer.init()
+        mixer.music.load('versao_final/src/musicas/jogo.mp3')
+        mixer.music.play(-1)
+                    
         while self.__estado == "jogando":
 
             # delta time é o tempo de um frame
@@ -109,6 +113,10 @@ class Sistema(Singleton):
     def menu(self):
         self.__estado = "menu"
         self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_inicial.png")
+
+        mixer.init()
+        mixer.music.load('versao_final/src/musicas/menu.mp3')
+        mixer.music.play(-1)
 
         while self.__estado == "menu":
             mx, my = pygame.mouse.get_pos()
@@ -152,9 +160,13 @@ class Sistema(Singleton):
         self.__estado = "final"
         self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_final.png")
 
+        mixer.init()
+        mixer.music.load('versao_final/src/musicas/game_over.mp3')
+        mixer.music.play()
+
         font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 16)
         button_salvar = pygame.Rect(705, 510, 210, 74)
-        input_box = pygame.Rect(550, 172, 274, 40)
+        input_box = pygame.Rect(500, 172, 274, 40)
         color_inactive = pygame.Color('white')
         color_active = pygame.Color('gray')
         color = color_inactive
@@ -201,7 +213,7 @@ class Sistema(Singleton):
             txt_surface = font.render(text, True, color)
             txt_pontuacao = font.render("{:.1f}".format(self.__jogo.pontuacao), True, pygame.Color("white"))
             tela.screen.blit(txt_surface, (input_box.x+5, input_box.y+10))
-            tela.screen.blit(txt_pontuacao, (450, 238))
+            tela.screen.blit(txt_pontuacao, (400, 238))
             pygame.draw.rect(tela.screen, color, input_box, 2)
             
             self.checar_eventos()
