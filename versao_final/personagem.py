@@ -1,6 +1,6 @@
 import pygame
 from abc import ABC
-from pygame import mixer
+
 
 class Personagem(ABC):
 
