@@ -8,18 +8,12 @@ import pygame
 from pygame import mixer
 
 
-""" to do list:
-        -> mover toda a lógica de desenho e apresentação de informações para a view
-        -> achar um jeito melhor para fazer a lógica de estados (código muito repetitivo)
-        ✓ - ajeitar botões
-        ✓ - desenho dos backgrounds
-"""
-
 # HERANÇA do Singleton
 class Sistema(Singleton):
 
     def __init__(self):
         pygame.init()
+        pygame.key.set_repeat(500, 100)
 
         self.__jogo = Jogo()                        # objeto do jogo
         self.__pontuacoes_dao = PontuacoesDAO()     # DAO das pontuacoes
@@ -49,6 +43,7 @@ class Sistema(Singleton):
     def recorde(self, novo_recorde):
         self.__recorde = novo_recorde
 
+
     # Atualiza as posiçoes do ranking organizando do maior para o menor
     def atualizar_posicoes(self):
         ordenar_ranking = lambda item: item[1]
@@ -75,7 +70,8 @@ class Sistema(Singleton):
 
     # eventos de input do usuário
     def checar_eventos(self):
-        for event in pygame.event.get():
+        self.__eventos = pygame.event.get()
+        for event in self.__eventos:
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -83,6 +79,7 @@ class Sistema(Singleton):
                     self.__click = True
             else:
                 self.__click = False
+
 
     # Estado de jogo 
     def jogando(self):
@@ -183,38 +180,26 @@ class Sistema(Singleton):
 
 
         active = False
-        deletando = False
-        digitando = False
-
         text = ''
-        text_final = ''
         
         while self.__estado == "final":
             mx, my = pygame.mouse.get_pos()
 
             self.checar_eventos()
 
-            if self.__click and not active:
+            if self.__click:
                 # Toggle the active variable.
                 active = input_box.collidepoint((mx, my))
 
-            teclas = pygame.key.get_pressed()
-
-            if teclas[pygame.KEYUP] and active:
-                if teclas[pygame.K_BACKSPACE]:
-                    deletando = False
-
-            if teclas[pygame.KEYDOWN] and active:
-                if teclas[pygame.K_RETURN]:
-                    text = ''
-                if teclas[pygame.K_BACKSPACE]:
-                    deletando = True
-                else:
-                    text += teclas[].unicode
-                    print(text)
-        
-            if deletando:
-                text = text[:-1]
+            if active:
+                for event in self.__eventos:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_RETURN:
+                            text = ''
+                        elif event.key == pygame.K_BACKSPACE:
+                            text = text[:-1]
+                        else:
+                            text += event.unicode
 
 
             if button_salvar.collidepoint((mx, my)):
@@ -235,5 +220,4 @@ class Sistema(Singleton):
             tela.screen.blit(txt_pontuacao, (400, 238))
             pygame.draw.rect(tela.screen, color, input_box, 2)
             
-            self.checar_eventos()
             self.atualizar_tela()

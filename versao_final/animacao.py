@@ -6,14 +6,6 @@ from copy import copy
 from pygame import constants
 from constantes import Constantes
 
-
-"""
-to do list (anthon):
-    ✓ - Criar uma classe abstrata Animacao que funciona como um DAO para as sprites, para facilitar quando for implementar animações em obstaculos (q inclusive ja fecha com o princípio open-closed)
-    ✓ - Instanciar classes provenientes da classe Animacao nas classes correspontes Ex.: AnimacaoCavaleiro() em Jogador
-    ✓ - Manipular as classes filhas de Animacao dentro das classes correspondentes, facilita a leitura e o entendimento
-    - organizar o projeto em arq. MVC
-"""
 constante = 0.030
 
 class Animacao(pygame.sprite.Sprite, abc.ABC):
