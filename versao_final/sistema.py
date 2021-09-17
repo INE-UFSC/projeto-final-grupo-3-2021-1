@@ -15,11 +15,12 @@ from pygame import mixer
         ✓ - desenho dos backgrounds
 """
 
-
+# HERANÇA do Singleton
 class Sistema(Singleton):
 
     def __init__(self):
-        pygame.init()   
+        pygame.init()
+
         self.__jogo = Jogo()                        # objeto do jogo
         self.__pontuacoes_dao = PontuacoesDAO()     # DAO das pontuacoes
         self.__ranking = {}                         # ranking das pontuacoes
@@ -48,7 +49,7 @@ class Sistema(Singleton):
     def recorde(self, novo_recorde):
         self.__recorde = novo_recorde
 
-
+    # Atualiza as posiçoes do ranking organizando do maior para o menor
     def atualizar_posicoes(self):
         ordenar_ranking = lambda item: item[1]
         self.__ranking = self.__pontuacoes_dao.get_all()
@@ -83,7 +84,7 @@ class Sistema(Singleton):
             else:
                 self.__click = False
 
-
+    # Estado de jogo 
     def jogando(self):
         self.__estado = "jogando"
         tempo_inicial = time.time()
@@ -108,7 +109,7 @@ class Sistema(Singleton):
             self.checar_eventos()
             self.atualizar_tela()
             
-            
+    # Estado de seleçao (menu)   
     def menu(self):
         self.__estado = "menu"
         self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_inicial.png")
@@ -127,7 +128,7 @@ class Sistema(Singleton):
             if self.__click:
                 for bttn in [button_jogar, button_ranking, button_sair]:
                     if bttn.collidepoint((mx, my)):
-                        if bttn == button_jogar:
+                        if bttn == button_jogar: 
                             self.jogando()
                         elif bttn == button_ranking:
                             self.ranking()
@@ -138,7 +139,7 @@ class Sistema(Singleton):
             self.desenhar_fundo()
             self.atualizar_tela()
             
-    
+    # Tela do ranking
     def ranking(self):
         self.__estado = "ranking"
         self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_ranking.png")
@@ -164,6 +165,7 @@ class Sistema(Singleton):
             self.checar_eventos()
             self.atualizar_tela()
 
+    # Tela após perder o jogo
     def final(self):
         self.__estado = "final"
         self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_final.png")
@@ -178,45 +180,55 @@ class Sistema(Singleton):
         color_inactive = pygame.Color('white')
         color_active = pygame.Color('gray')
         color = color_inactive
+
+
         active = False
+        deletando = False
+        digitando = False
+
         text = ''
+        text_final = ''
         
         while self.__estado == "final":
             mx, my = pygame.mouse.get_pos()
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        self.__click = True
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    # If the user clicked on the input_box rect.
-                    if input_box.collidepoint(event.pos):
-                        # Toggle the active variable.
-                        active = not active
-                    else:
-                        active = False
-                    # Change the current color of the input box.
-                    color = color_active if active else color_inactive
-                if event.type == pygame.KEYDOWN:
-                    if active:
-                        if event.key == pygame.K_RETURN:
-                            # print(text)
-                            text = ''
-                        elif event.key == pygame.K_BACKSPACE:
-                            text = text[:-1]
-                        else:
-                            text += event.unicode
-                
-                if button_salvar.collidepoint((mx, my)):
-                    if self.__click:
-                        self.salvar(text, self.__jogo.pontuacao)
-                        del self.__jogo
-                        self.__jogo = Jogo()
-                        self.menu()
+
+            self.checar_eventos()
+
+            if self.__click and not active:
+                # Toggle the active variable.
+                active = input_box.collidepoint((mx, my))
+
+            teclas = pygame.key.get_pressed()
+
+            if teclas[pygame.KEYUP] and active:
+                if teclas[pygame.K_BACKSPACE]:
+                    deletando = False
+
+            if teclas[pygame.KEYDOWN] and active:
+                if teclas[pygame.K_RETURN]:
+                    text = ''
+                if teclas[pygame.K_BACKSPACE]:
+                    deletando = True
+                else:
+                    text += teclas[].unicode
+                    print(text)
+        
+            if deletando:
+                text = text[:-1]
+
+
+            if button_salvar.collidepoint((mx, my)):
+                if self.__click:
+                    self.salvar(text, self.__jogo.pontuacao)
+
+                    del self.__jogo
+                    self.__jogo = Jogo()
+                    self.menu()
 
             self.desenhar_fundo()
 
+            # muda a cor
+            color = color_active if active else color_inactive
             txt_surface = font.render(text, True, color)
             txt_pontuacao = font.render("{:.1f}".format(self.__jogo.pontuacao), True, pygame.Color("white"))
             tela.screen.blit(txt_surface, (input_box.x+5, input_box.y+10))

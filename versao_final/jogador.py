@@ -6,7 +6,7 @@ from tela import tela
 from constantes import Constantes
 from animacao import AnimacaoCavaleiro
 
-
+# HERANÇA de personagem com especializaçao
 class Jogador(Personagem):
 
     def __init__(self):

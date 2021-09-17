@@ -62,7 +62,7 @@ class Cenario:
             if self.poder_na_tela != None:
                 self.__poder_na_tela.velocidade += self.__aceleracao
 
-
+    # funçao que movimenta o cenario
     def mover_cenario(self, dt):
         self.__posicao_fundo[0] -= (0.5 + self.__velocidade_acumulada*dt/3)
         self.__posicao_fundo_inv[0] -= (0.5 + self.__velocidade_acumulada*dt/3)
@@ -76,7 +76,7 @@ class Cenario:
             fundo_index += 1
 
 
-    # desenha o chão do game
+    # desenha o chão do jogo
     def desenhar(self):
         self.__fundos.draw(tela.screen)
         self.__fundos.update()

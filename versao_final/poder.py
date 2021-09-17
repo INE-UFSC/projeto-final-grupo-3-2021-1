@@ -4,6 +4,7 @@ from tela import tela
 from animacao import EstaticoPoder
 import pygame
 import abc
+from pygame import mixer
 
 
 # Classe base do poder
@@ -88,5 +89,8 @@ class InvPoder(Poder):
                         posicao=posicao,
                         sprite_path='versao_final/src/estaticos/pocao_inv.png')
 
+    # funçao que é chamado quando o jogador pega o poder, criando um som e chamando a funçao da invulnerabilidade
     def usar(self, jogador: Jogador):
+        invencivel = mixer.Sound('versao_final/src/efeitos_sonoros/invenc.mp3')
+        invencivel.play(3)
         jogador.tornar_invulneravel_por(self.diferencial)

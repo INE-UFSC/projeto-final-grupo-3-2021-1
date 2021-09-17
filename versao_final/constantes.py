@@ -1,7 +1,7 @@
 from singleton import Singleton
 import pygame
 
-
+# constantes globais
 class Constantes(Singleton):
     def __init__(self):
         super().__init__()

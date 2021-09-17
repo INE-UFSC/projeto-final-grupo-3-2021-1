@@ -44,7 +44,7 @@ class Jogo():
                 self.__jogador.rect.colliderect(obs.rect_morcego)) and self.__jogador.invulneravel is False:
                 
                 self.__jogador.tornar_invulneravel_por()
-                # perde uma vida (tira 1 coraçao na tela)
+                # perde uma vida (tira 1 coraçao na tela) e faz um som
                 self.__jogador.vida -= 1
                 hit = mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.mp3')
                 hit.play()

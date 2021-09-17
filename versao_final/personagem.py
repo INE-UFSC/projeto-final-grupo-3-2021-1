@@ -1,7 +1,7 @@
 import pygame
 from abc import ABC
 
-
+# CLASSE ABSTRATA
 class Personagem(ABC):
 
     def __init__(self, vida, vida_maxima, velocidade, posicao):

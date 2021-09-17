@@ -25,11 +25,13 @@ class Animacao(pygame.sprite.Sprite, abc.ABC):
         self.path = path
         try:
             self.__carregar()
+        # TRATAMENTO DE EXCESÇOES para o carregamento das sprites
         except TypeError:
             self.__carregar_multiplas()
         except FileNotFoundError as e:
             print(e)
 
+    # carrega as sprites
     def __carregar(self):
         for sprite in os.listdir(self.path):
             self.cache_sprites.append(pygame.image.load(self.path + sprite))
@@ -46,13 +48,15 @@ class Animacao(pygame.sprite.Sprite, abc.ABC):
                 self.cache_sprites_aux = copy(self.cache_sprites)
                 self.cache_sprites.clear()
                 aux = False
-        
+    
+    # pega todas as sprites
     def pegar_sprites(self):
         if self.cache_sprites_aux != []:
             return self.cache_sprites_aux, self.cache_sprites
         else:
             return self.cache_sprites
 
+    # ABSTRAÇAO
     @abc.abstractmethod
     def popular_sprites(self):
         pass
@@ -61,7 +65,7 @@ class Animacao(pygame.sprite.Sprite, abc.ABC):
     def update(self):
         pass
 
-
+# HERANÇA de Animacao com uma especializaçao
 class AnimacaoCavaleiro(Animacao):
 
     def __init__(self):
@@ -85,9 +89,11 @@ class AnimacaoCavaleiro(Animacao):
     def rect(self, rect):
         self.__rect = rect
 
+    # pega as sprites e chama a funçao para colocar todas elas em uma lista
     def popular_sprites(self):
         self.__sprites_jogador_movendo, self.__sprites_jogador_pulando = super().pegar_sprites()
 
+    # atualizaçao do desenho da sprite mudando elas
     def update(self, pulando: bool):
         self.__sprite_atual_index += constante
 
@@ -106,6 +112,7 @@ class AnimacaoCavaleiro(Animacao):
         self.image = self.__sprite_atual
 
 
+# HERANÇA de Animacao com uma especializaçao
 class AnimacaoMorcego(Animacao):
 
     def __init__(self):
@@ -130,9 +137,11 @@ class AnimacaoMorcego(Animacao):
     def rect(self, rect):
         self.__rect = rect
 
+    # pega as sprites e chama a funçao para colocar todas elas em uma lista
     def popular_sprites(self):
         self.__sprites_morcego_movendo = super().pegar_sprites()
 
+    # atualiza as sprites mudando elas
     def update(self):
         self.__sprite_atual_index += constante
 
@@ -146,6 +155,7 @@ class AnimacaoMorcego(Animacao):
         self.image = self.__sprite_atual
 
 
+# HERANÇA de Animacao com uma especializaçao 
 class AnimacaoGolem(Animacao):
 
     def __init__(self):
@@ -170,9 +180,11 @@ class AnimacaoGolem(Animacao):
     def rect(self, rect):
         self.__rect = rect
 
+    # pega as sprites e chama a funçao para colocar todas elas em uma lista
     def popular_sprites(self):
         self.__sprites_golem_movendo = super().pegar_sprites()
 
+    # atualiza as sprites mudando elas
     def update(self):
         self.__sprite_atual_index += constante
 
@@ -185,7 +197,7 @@ class AnimacaoGolem(Animacao):
         self.__rect = self.__sprite_atual.get_rect()
         self.image = self.__sprite_atual
 
-
+# HERANÇA de Animacao com especializacao
 class AnimacaoFundo(Animacao):
 
     def __init__(self, path: str, posicao_inicial: list):
@@ -199,13 +211,14 @@ class AnimacaoFundo(Animacao):
 
         self.jogando = True
 
+    # pega as sprites e chama a funçao para colocar todas elas em uma lista
     def popular_sprites(self):
         self.__sprite_fundo = super().pegar_sprites()
 
     def update(self):
         pass
 
-
+# Classe de sprites que nao possuem movimento
 class Estatico(pygame.sprite.Sprite):
     def __init__(self, posicao, sprite_path, escala):
         pygame.sprite.Sprite.__init__(self)
@@ -216,12 +229,13 @@ class Estatico(pygame.sprite.Sprite):
         self.rect = self.imagem.get_rect()
         self.rect.topleft = [self.posicao[0], self.posicao[1]]
 
+# HERANÇA de Estaico com especializaçao das sprites de quantidade de vida
 class EstaticoCoracao(Estatico):
 
     def __init__(self, posicao):
         super().__init__(posicao, 'versao_final/src/estaticos/coracao.png', 2)
 
-
+# HERANÇA de Estatico especializaçao das sprites dos poderes (poçoes)
 class EstaticoPoder(Estatico):
 
     def __init__(self, posicao, path):
