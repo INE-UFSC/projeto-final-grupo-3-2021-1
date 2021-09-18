@@ -2,6 +2,7 @@ from jogo import Jogo
 from tela import tela
 from singleton import Singleton
 from DAO.pontuacoesDAO import PontuacoesDAO
+from state import State
 import pygame
 import sys, time
 import pygame
@@ -28,20 +29,16 @@ class Sistema(Singleton):
 
 
     @property
-    def recorde(self):
-        return self.__recorde   # VERIFICAR DEPOIS ESTA IMPLEMENTAÇÃO
-
-    @property
     def estado_jogo(self):
         return self.__estado
 
     @estado_jogo.setter
     def estado_jogo(self, novo_estado):
         self.__estado = novo_estado
-        
-    @recorde.setter
-    def recorde(self, novo_recorde):
-        self.__recorde = novo_recorde
+
+    # A SER IMPLEMENTADO AINDA
+    def proximo_estado(self, estado: State):
+        self.__estado = estado
 
 
     # Atualiza as posiçoes do ranking organizando do maior para o menor
