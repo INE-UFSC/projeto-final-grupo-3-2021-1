@@ -2,7 +2,7 @@ from jogo import Jogo
 from tela import tela
 from singleton import Singleton
 from DAO.pontuacoesDAO import PontuacoesDAO
-from state import State
+from state import State, Menu
 import pygame
 import sys, time
 import pygame
@@ -29,16 +29,41 @@ class Sistema(Singleton):
 
 
     @property
-    def estado_jogo(self):
+    def estado(self):
         return self.__estado
 
-    @estado_jogo.setter
-    def estado_jogo(self, novo_estado):
-        self.__estado = novo_estado
+    @estado.setter
+    def estado(self, estado):
+        self.__estado = estado
+
+
+    # main loop da janela
+    def __main(self):
+        tempo_inicial = time.time()
+
+        while True:
+            tempo_inicial = self.calcular_dt(tempo_inicial)
+            self.__estado.executar()
+
+
+    # inicia o loop com o estado inicial sendo o menu
+    def iniciar(self):
+        self.__estado = Menu(self)
+        self.__main()
+
+
+    # delta time é o tempo de um frame
+    def calcular_dt(self, tempo_inicial):
+        tempo_final = time.time()
+
+        self.__dt = tempo_final - tempo_inicial
+        return tempo_final
+
 
     # A SER IMPLEMENTADO AINDA
     def proximo_estado(self, estado: State):
         self.__estado = estado
+
 
 
     # Atualiza as posiçoes do ranking organizando do maior para o menor
@@ -48,13 +73,13 @@ class Sistema(Singleton):
         self.__ranking = sorted(self.__ranking, key=ordenar_ranking, reverse=True)
 
 
-    # salva a pontuacao
+    # salva o jogo atual
     def salvar(self, nome: str, pontuacao: float):
         self.__pontuacoes_dao.add(nome, pontuacao)
         self.atualizar_posicoes()
 
 
-    # desenha o atual fundo em cada seção do menu
+    # desenha o fundo atual
     def desenhar_fundo(self):
         tela.screen.blit(self.__fundo_atual, self.__fundo_atual.get_rect())
 
