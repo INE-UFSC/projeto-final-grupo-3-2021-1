@@ -20,21 +20,16 @@ class Sistema(Singleton):
         self.__pontuacoes_dao = PontuacoesDAO()     # DAO das pontuacoes
         self.__ranking = {}                         # ranking das pontuacoes
 
-        self.__estado = None                        # estado da janela
+        self.__estado = None                        # estado da sistema (janela)
+        self.__eventos = None                       # eventos de input do usuario
+        self.__fundo_atual = None                   # atual fundo da janela
+        self.__musica_atual = None                  # musica atual da janela
+
         self.__click = False                        # interação do usuário com a janela
-        self.__fundo_atual = None
-        self.__clock = pygame.time.Clock()
+        self.__clock = pygame.time.Clock()          # pygame clock
+        self.__dt = 0                               # tempo de um frame (delta time)
 
-        self.menu()
-
-
-    @property
-    def estado(self):
-        return self.__estado
-
-    @estado.setter
-    def estado(self, estado):
-        self.__estado = estado
+        # self.menu()
 
 
     # main loop da janela
@@ -43,13 +38,39 @@ class Sistema(Singleton):
 
         while True:
             tempo_inicial = self.calcular_dt(tempo_inicial)
+            self.__clock.tick(300)
             self.__estado.executar()
+
+            self.atualizar_tela()
+            self.track_eventos()
 
 
     # inicia o loop com o estado inicial sendo o menu
     def iniciar(self):
         self.__estado = Menu(self)
         self.__main()
+
+    
+    # fecha a janela
+    def sair(self):
+        sys.exit()
+
+
+    # recria o objeto do jogo
+    def reiniciar_jogo(self):
+        del self.__jogo
+        self.__jogo = Jogo()
+
+
+    # salva o jogo atual
+    def salvar(self, nome: str):
+        self.__pontuacoes_dao.add(nome, self.__jogo.pontuacao)
+        self.atualizar_posicoes()
+
+
+    # troca o atual estado por outro
+    def proximo_estado(self, estado: State):
+        self.__estado = estado
 
 
     # delta time é o tempo de um frame
@@ -60,10 +81,15 @@ class Sistema(Singleton):
         return tempo_final
 
 
-    # A SER IMPLEMENTADO AINDA
-    def proximo_estado(self, estado: State):
-        self.__estado = estado
+    # toca a musica atual, definida pelo estado
+    def tocar_musica(self, loop=False):
+        mixer.init()
+        mixer.music.load(self.__musica_atual)
 
+        if loop:
+            mixer.music.play(-1)
+        else:
+            mixer.music.play()
 
 
     # Atualiza as posiçoes do ranking organizando do maior para o menor
@@ -73,13 +99,20 @@ class Sistema(Singleton):
         self.__ranking = sorted(self.__ranking, key=ordenar_ranking, reverse=True)
 
 
-    # salva o jogo atual
-    def salvar(self, nome: str, pontuacao: float):
-        self.__pontuacoes_dao.add(nome, pontuacao)
-        self.atualizar_posicoes()
+    # registra eventos de input do usuário
+    def track_eventos(self):
+        self.__eventos = pygame.event.get()
+        for event in self.__eventos:
+            if event.type == pygame.QUIT:
+                self.sair()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    self.__click = True
+            else:
+                self.__click = False
 
 
-    # desenha o fundo atual
+    # desenha o fundo atual, definido pelo estado
     def desenhar_fundo(self):
         tela.screen.blit(self.__fundo_atual, self.__fundo_atual.get_rect())
 
@@ -90,156 +123,47 @@ class Sistema(Singleton):
         tela.screen.fill((0, 0, 0))
 
 
-    # eventos de input do usuário
-    def checar_eventos(self):
-        self.__eventos = pygame.event.get()
-        for event in self.__eventos:
-            if event.type == pygame.QUIT:
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    self.__click = True
-            else:
-                self.__click = False
+    # getters e setters
+    @property
+    def estado(self):
+        return self.__estado
 
+    @property
+    def eventos(self):
+        return self.__eventos
 
-    # Estado de jogo 
-    def jogando(self):
-        self.__estado = "jogando"
-        tempo_inicial = time.time()
+    @property
+    def jogo(self):
+        return self.__jogo
 
-        mixer.init()
-        mixer.music.load('versao_final/src/musicas/jogo.mp3')
-        mixer.music.play(-1)
-                    
-        while self.__estado == "jogando":
+    @property
+    def click(self):
+        return self.__click
 
-            # delta time é o tempo de um frame
-            tempo_final = time.time()
-            dt = tempo_final - tempo_inicial
-            tempo_inicial = tempo_final
+    @property
+    def dt(self):
+        return self.__dt
 
-            self.__clock.tick(300)
-            self.__jogo.atualizar(dt)
-            
-            if self.__jogo.final:
-                self.final()
-            
-            self.checar_eventos()
-            self.atualizar_tela()
-            
-    # Estado de seleçao (menu)   
-    def menu(self):
-        self.__estado = "menu"
-        self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_inicial.png")
+    @property
+    def fundo_atual(self):
+        return self.__fundo_atual
 
-        mixer.init()
-        mixer.music.load('versao_final/src/musicas/menu.mp3')
-        mixer.music.play(-1)
+    @property
+    def musica_atual(self):
+        return self.__musica_atual
 
-        while self.__estado == "menu":
-            mx, my = pygame.mouse.get_pos()
-
-            button_jogar = pygame.Rect(40, 180, 374 , 94)
-            button_ranking = pygame.Rect(40, 280, 374 , 94)
-            button_sair = pygame.Rect(40, 380, 374 , 94)
-            
-            if self.__click:
-                for bttn in [button_jogar, button_ranking, button_sair]:
-                    if bttn.collidepoint((mx, my)):
-                        if bttn == button_jogar: 
-                            self.jogando()
-                        elif bttn == button_ranking:
-                            self.ranking()
-                        elif bttn == button_sair:
-                            sys.exit()
-            
-            self.checar_eventos()
-            self.desenhar_fundo()
-            self.atualizar_tela()
-            
-    # Tela do ranking
+    @property
     def ranking(self):
-        self.__estado = "ranking"
-        self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_ranking.png")
-        self.atualizar_posicoes()
+        return self.__ranking
 
-        font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 20)
-        texto_ranks = [font.render(f"{i+1} - {self.__ranking[i][0]}:"+"{:.1f}".format(self.__ranking[i][1]), True, pygame.Color('white')) for i in range(len(self.__ranking))]
-        button_voltar = pygame.Rect(20, 500, 224 , 74)
+    @ranking.setter
+    def ranking(self, ranking):
+        self.__ranking = ranking
 
+    @fundo_atual.setter
+    def fundo_atual(self, fundo):
+        self.__fundo_atual = fundo
 
-        while self.__estado == "ranking":
-            self.desenhar_fundo()
-            mx, my = pygame.mouse.get_pos()
-
-            posicao_y = 170
-            for text in texto_ranks:
-                tela.screen.blit(text, (310, posicao_y))
-                posicao_y += 30
-
-            if self.__click and button_voltar.collidepoint((mx, my)):
-                self.menu()
-            
-            self.checar_eventos()
-            self.atualizar_tela()
-
-    # Tela após perder o jogo
-    def final(self):
-        self.__estado = "final"
-        self.__fundo_atual = pygame.image.load("versao_final/src/backgrounds/tela_final.png")
-
-        mixer.init()
-        mixer.music.load('versao_final/src/musicas/game_over.mp3')
-        mixer.music.play()
-
-        font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 16)
-        button_salvar = pygame.Rect(705, 510, 210, 74)
-        input_box = pygame.Rect(500, 172, 274, 40)
-        color_inactive = pygame.Color('white')
-        color_active = pygame.Color('gray')
-        color = color_inactive
-
-
-        active = False
-        text = ''
-        
-        while self.__estado == "final":
-            mx, my = pygame.mouse.get_pos()
-
-            self.checar_eventos()
-
-            if self.__click:
-                # Toggle the active variable.
-                active = input_box.collidepoint((mx, my))
-
-            if active:
-                for event in self.__eventos:
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_RETURN:
-                            text = ''
-                        elif event.key == pygame.K_BACKSPACE:
-                            text = text[:-1]
-                        else:
-                            text += event.unicode
-
-
-            if button_salvar.collidepoint((mx, my)):
-                if self.__click:
-                    self.salvar(text, self.__jogo.pontuacao)
-
-                    del self.__jogo
-                    self.__jogo = Jogo()
-                    self.menu()
-
-            self.desenhar_fundo()
-
-            # muda a cor
-            color = color_active if active else color_inactive
-            txt_surface = font.render(text, True, color)
-            txt_pontuacao = font.render("{:.1f}".format(self.__jogo.pontuacao), True, pygame.Color("white"))
-            tela.screen.blit(txt_surface, (input_box.x+5, input_box.y+10))
-            tela.screen.blit(txt_pontuacao, (400, 238))
-            pygame.draw.rect(tela.screen, color, input_box, 2)
-            
-            self.atualizar_tela()
+    @musica_atual.setter
+    def musica_atual(self, musica):
+        self.__musica_atual = musica

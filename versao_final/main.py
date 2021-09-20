@@ -3,4 +3,5 @@ from sistema import Sistema
 
 """Inicia Sistema do jogo"""
 if __name__ == '__main__':
-    Sistema()
+    sys = Sistema()
+    sys.iniciar()
