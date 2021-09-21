@@ -15,6 +15,7 @@ class Sistema(Singleton):
     def __init__(self):
         pygame.init()
         pygame.key.set_repeat(500, 100)
+        pygame.mixer.init()
 
         self.__jogo = Jogo()                        # objeto do jogo
         self.__pontuacoes_dao = PontuacoesDAO()     # DAO das pontuacoes
@@ -83,7 +84,6 @@ class Sistema(Singleton):
 
     # toca a musica atual, definida pelo estado
     def tocar_musica(self, loop=False):
-        mixer.init()
         mixer.music.load(self.__musica_atual)
 
         if loop:

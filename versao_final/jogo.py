@@ -4,7 +4,6 @@ from obstaculo import Obstaculo
 from tela import tela
 import pygame
 from constantes import Constantes
-from pygame import mixer
 
 class Jogo():
 
@@ -47,7 +46,7 @@ class Jogo():
                 self.__jogador.tornar_invulneravel_por()
                 # perde uma vida (tira 1 coraçao na tela) e faz um som
                 self.__jogador.vida -= 1
-                hit = mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.mp3')
+                hit = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.mp3')
                 hit.play()
                 
                 
@@ -57,7 +56,7 @@ class Jogo():
             if self.__jogador.rect.colliderect(self.__cenario.poder_na_tela.retangulo):
                 self.__cenario.poder_na_tela.usar(self.__jogador)
                 self.__cenario.poder_na_tela = None
-                power = mixer.Sound('versao_final/src/efeitos_sonoros/vida.mp3')
+                power = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/vida.mp3')
                 power.play()
 
 
