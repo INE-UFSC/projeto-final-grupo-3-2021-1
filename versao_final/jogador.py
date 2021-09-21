@@ -46,6 +46,8 @@ class Jogador(Personagem):
     # movimento do pulo
     def movimento_pulo(self, dt, seta_cima_pressionada):
         if self.__pulando is False and seta_cima_pressionada:
+            pulo = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/pulo.wav')
+            pulo.play()
             self.__pulando = True
         if self.__pulando:
             self.posicao[1] -= self.__velocidade_y*self.__tamanho_pulo * dt  # tamanho do pulo
