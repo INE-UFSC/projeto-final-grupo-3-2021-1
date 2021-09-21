@@ -1,6 +1,6 @@
 from DAO.DAO import DAO
 
-
+# DAO do ranking HERENÇAO do DAO
 class PontuacoesDAO(DAO):
 
     def __init__(self):

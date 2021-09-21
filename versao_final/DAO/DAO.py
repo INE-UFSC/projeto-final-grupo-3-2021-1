@@ -2,12 +2,14 @@ import json
 from abc import ABC
 from copy import copy
 
-
+# DAO classe Abstrata
 class DAO(ABC):
 
     def __init__(self, fonte=''):
         self.fonte = fonte
         self.cache = {}
+
+        # tratamento de exceçoes
         try:
             self.__load()
         except TypeError:

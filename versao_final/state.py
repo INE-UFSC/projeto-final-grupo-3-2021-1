@@ -18,6 +18,7 @@ class State(ABC):
 
         self._sistema.musica_atual = musica
 
+    # getters e setters
     @property
     def sistema(self):
         return self._sistema
@@ -44,12 +45,13 @@ class Menu(State):
         self.button_ranking = pygame.Rect(40, 280, 374 , 94)
         self.button_sair = pygame.Rect(40, 380, 374 , 94)
 
-    # Executa uma tela com todas as opçoes do jogo antes de inicialo
+    # Executa uma tela com todas as opçoes do jogo antes de inicialo (menu)
     def executar(self):
         self.sistema.desenhar_fundo()
         mx, my = pygame.mouse.get_pos()
         proximo_estado = None
-
+        
+        # mapeia o click na tela para mudar a tela de acordo com o botao clicado
         if self.sistema.click:
             for bttn in [self.button_jogar, self.button_ranking, self.button_sair]:
                 if bttn.collidepoint((mx, my)):
@@ -60,6 +62,7 @@ class Menu(State):
                     elif bttn == self.button_sair:
                         self.sistema.sair()
 
+        # passa para o proximo estado
         if proximo_estado != None:
             self.sistema.proximo_estado(proximo_estado)
 
@@ -77,6 +80,7 @@ class Jogando(State):
     def executar(self):
         self.sistema.jogo.atualizar(self.sistema.dt)
 
+        # quando o jogador fica sem vida, é passado para o proximo estado
         if self.sistema.jogo.jogador.vida <= 0:
             self.sistema.proximo_estado(Final(self.sistema))
 
@@ -147,7 +151,7 @@ class Final(State):
                     else:
                         self.nome += event.unicode
 
-
+        # botao de salvar o nick do jogador, reiniciar o jogo, e passa para o proximo estado 
         if self.button_salvar.collidepoint((mx, my)):
             if self.sistema.click:
                 self.sistema.salvar(self.nome)

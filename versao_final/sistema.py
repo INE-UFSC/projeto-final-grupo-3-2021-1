@@ -123,7 +123,7 @@ class Sistema(Singleton):
         tela.screen.fill((0, 0, 0))
 
 
-    # getters e setters
+    # getters
     @property
     def estado(self):
         return self.__estado
@@ -156,6 +156,7 @@ class Sistema(Singleton):
     def ranking(self):
         return self.__ranking
 
+    # setters
     @ranking.setter
     def ranking(self, ranking):
         self.__ranking = ranking

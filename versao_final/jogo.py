@@ -14,6 +14,7 @@ class Jogo():
         self.__pontuacao = 0                # pontuação atual do jogo
         self.__final = False
 
+    # Getters e setters
     @property
     def jogador(self):
         return self.__jogador

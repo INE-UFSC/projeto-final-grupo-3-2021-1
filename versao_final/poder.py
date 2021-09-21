@@ -17,7 +17,7 @@ class Poder(abc.ABC):
         self.__retangulo = pygame.Rect(self.__posicao[0], self.__posicao[1], 10, 10)
         self.__animacao = pygame.sprite.Group(EstaticoPoder(posicao, sprite_path))
     
-
+    # getters
     @property
     def diferencial(self):
         return self.__diferencial
@@ -34,6 +34,7 @@ class Poder(abc.ABC):
     def retangulo(self):
         return self.__retangulo
 
+    # setters
     @velocidade.setter
     def velocidade(self, nova):
         self.__velocidade = nova

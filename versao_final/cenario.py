@@ -22,6 +22,7 @@ class Cenario:
         self.__fundos = pygame.sprite.Group(AnimacaoFundo('versao_final/src/backgrounds/fundo_jogo/fundo_nrml/', self.__posicao_fundo),
                                             AnimacaoFundo('versao_final/src/backgrounds/fundo_jogo/fundo_inv/', self.__posicao_fundo_inv))
 
+    # Getters e setters
     @property
     def coracoes(self):
         return self.__coracoes
@@ -47,6 +48,7 @@ class Cenario:
 
             self.__tempo_invocado = pygame.time.get_ticks()
 
+        # se tiver algum poder na tela ele atualiza para o movimento seguir o chao
         if self.__poder_na_tela != None:
             self.__poder_na_tela.atualizar(dt)
 

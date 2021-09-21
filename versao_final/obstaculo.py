@@ -16,7 +16,7 @@ class Obstaculo(pygame.sprite.Sprite):
         self.__animacao_golem = pygame.sprite.Group(AnimacaoGolem())
         self.rect_golem = self.__animacao_golem.sprites()[0].rect
 
-
+    # Getters e setters
     @property
     def velocidade(self):
         return self.__velocidade

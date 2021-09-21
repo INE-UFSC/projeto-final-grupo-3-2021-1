@@ -17,7 +17,7 @@ class Animacao(pygame.sprite.Sprite, abc.ABC):
         self.path = path
         try:
             self.__carregar()
-        # TRATAMENTO DE EXCESÇOES para o carregamento das sprites
+        # TRATAMENTO DE EXCEÇOES para o carregamento das sprites
         except TypeError:
             self.__carregar_multiplas()
         except FileNotFoundError as e:
@@ -28,6 +28,7 @@ class Animacao(pygame.sprite.Sprite, abc.ABC):
         for sprite in os.listdir(self.path):
             self.cache_sprites.append(pygame.image.load(self.path + sprite))
 
+    # carrega mais de uma sprite
     def __carregar_multiplas(self):
         paths = copy(self.path)
         aux = True
@@ -89,6 +90,7 @@ class AnimacaoCavaleiro(Animacao):
     def update(self, pulando: bool):
         self.__sprite_atual_index += constante
 
+        # seleçao das sprites se ele estiver pulando ou se estiver somente correndo
         if not pulando:
             if self.__sprite_atual_index >= len(self.__sprites_jogador_movendo):
                 self.__sprite_atual_index = 0
@@ -164,6 +166,7 @@ class AnimacaoGolem(Animacao):
 
         self.__movendo = True
 
+    # Guetters e setters
     @property
     def rect(self):
         return self.__rect
