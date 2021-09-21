@@ -3,7 +3,7 @@ from tela import tela
 import pygame
 import sys
 
-
+# Classe Abstrata
 class State(ABC):
 
     def __init__(self, sistema, fundo, musica):
@@ -30,7 +30,7 @@ class State(ABC):
     def executar(self):
         pass
 
-
+# HERANÇA de State executada até receber um evento de click em algum dos botoes
 class Menu(State):
 
     def __init__(self, sistema,
@@ -44,7 +44,7 @@ class Menu(State):
         self.button_ranking = pygame.Rect(40, 280, 374 , 94)
         self.button_sair = pygame.Rect(40, 380, 374 , 94)
 
-
+    # Executa uma tela com todas as opçoes do jogo antes de inicialo
     def executar(self):
         self.sistema.desenhar_fundo()
         mx, my = pygame.mouse.get_pos()
@@ -63,7 +63,7 @@ class Menu(State):
         if proximo_estado != None:
             self.sistema.proximo_estado(proximo_estado)
 
-
+# HERANÇA de State parte principal do jogo
 class Jogando(State):
 
     def __init__(self, sistema,
@@ -73,14 +73,14 @@ class Jogando(State):
         super().__init__(sistema, fundo, musica)
         self.sistema.tocar_musica(loop=True)
 
-
+    # Executa toda a parte da logica do jogo até perder ou fechar a janela
     def executar(self):
         self.sistema.jogo.atualizar(self.sistema.dt)
 
         if self.sistema.jogo.jogador.vida <= 0:
             self.sistema.proximo_estado(Final(self.sistema))
 
-
+# HERANÇA de State, mostra as miores pontuaçoes dos players
 class Ranking(State):
 
     def __init__(self, sistema,
@@ -94,7 +94,7 @@ class Ranking(State):
         self.texto_ranks = [self.font.render(f"{i+1} - {self.sistema.ranking[i][0]}:"+"{:.1f}".format(self.sistema.ranking[i][1]), True, pygame.Color('white')) for i in range(len(self.sistema.ranking))]
         self.button_voltar = pygame.Rect(20, 500, 224 , 74)
 
-
+    # Executa a tela de ranking ao clicar no botao
     def executar(self):
         self.sistema.desenhar_fundo()
         mx, my = pygame.mouse.get_pos()
@@ -107,7 +107,7 @@ class Ranking(State):
         if self.sistema.click and self.button_voltar.collidepoint((mx, my)):
             self.sistema.proximo_estado(Menu(self.sistema))
 
-
+# HERANÇA de State, tela de lose
 class Final(State):
 
     def __init__(self, sistema,
@@ -128,7 +128,7 @@ class Final(State):
         self.active = False
         self.nome = ''
 
-
+    # Executa a tela final do jogo após perder todas as vidas
     def executar(self):
         self.sistema.desenhar_fundo()
         mx, my = pygame.mouse.get_pos()
