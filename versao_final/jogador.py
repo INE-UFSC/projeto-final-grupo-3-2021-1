@@ -12,14 +12,16 @@ class Jogador(Personagem):
     def __init__(self):
         super().__init__(vida=3, vida_maxima=3, velocidade=400, posicao=[10,420])
         self.constantes = Constantes()
-        self.__animacao = pygame.sprite.Group(AnimacaoCavaleiro())
+        self.__animacao = AnimacaoCavaleiro(velocidade=0.03,
+                                            path_mov='versao_final/src/cavaleiro/movimento/',
+                                            path_pul='versao_final/src/cavaleiro/pulo/')
         self.__tamanho_pulo = 55
         self.__velocidade_y = 10
 
         self.__pulando = False
         
         #self.__imagem = cavaleiro.animacao_jogador_movendo[cavaleiro.imagem_atual]
-        self.__rect = self.__animacao.sprites()[0].rect
+        self.__rect = pygame.Rect(0, 0, 0, 0)
 
 
     @property
@@ -61,7 +63,7 @@ class Jogador(Personagem):
         
 
     # eventos do jogador
-    def eventos(self, dt):
+    def eventos(self):
         # aciona timer e oscila desenho se jogador está invulnerável
         if self.invulneravel:            
             self.mostrar = not self.mostrar
@@ -81,18 +83,15 @@ class Jogador(Personagem):
 
     # desenha o jogador
     def desenhar(self):
-        self.__animacao.sprites()[0].rect.topleft = self.posicao
-        self.__rect = self.__animacao.sprites()[0].rect
+        self.__animacao.update(self.posicao, self.__pulando)
+        self.__rect = self.__animacao.acompanhar_posicao(self.posicao)
 
         if self.mostrar:
             self.__animacao.draw(tela.screen)
         
-        self.__animacao.update(self.__pulando)
-
 
     # Função de loop do jogador que entra no loop do jogo
     def atualizar(self, dt):
         self.movimento(dt)
         self.desenhar()
-        self.eventos(dt)
-
+        self.eventos()

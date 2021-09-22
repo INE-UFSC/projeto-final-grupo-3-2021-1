@@ -52,15 +52,17 @@ class Menu(State):
         proximo_estado = None
         
         # mapeia o click na tela para mudar a tela de acordo com o botao clicado
-        if self.sistema.click:
-            for bttn in [self.button_jogar, self.button_ranking, self.button_sair]:
-                if bttn.collidepoint((mx, my)):
-                    if bttn == self.button_jogar: 
-                        proximo_estado = Jogando(self.sistema)
-                    elif bttn == self.button_ranking:
-                        proximo_estado = Ranking(self.sistema)
-                    elif bttn == self.button_sair:
-                        self.sistema.sair()
+        for bttn in [self.button_jogar, self.button_ranking, self.button_sair]:
+            if bttn.collidepoint((mx, my)) and self.sistema.click:
+                sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada.mp3')
+                sword.play()
+
+                if bttn == self.button_jogar: 
+                    proximo_estado = Jogando(self.sistema)
+                elif bttn == self.button_ranking:
+                    proximo_estado = Ranking(self.sistema)
+                elif bttn == self.button_sair:
+                    self.sistema.sair()
 
         # passa para o proximo estado
         if proximo_estado != None:
@@ -109,7 +111,10 @@ class Ranking(State):
             posicao_y += 30
 
         if self.sistema.click and self.button_voltar.collidepoint((mx, my)):
+            sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada.mp3')
+            sword.play()
             self.sistema.proximo_estado(Menu(self.sistema))
+
 
 # HERANÇA de State, tela de lose
 class Final(State):
@@ -137,9 +142,10 @@ class Final(State):
         self.sistema.desenhar_fundo()
         mx, my = pygame.mouse.get_pos()
 
-        if self.sistema.click:
-            # Toggle the active variable.
-            self.active = self.input_box.collidepoint((mx, my))
+        if self.input_box.collidepoint((mx, my)) and self.sistema.click:
+            #sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada.mp3')
+            #sword.play()         
+            self.active = not self.active
 
         if self.active:
             for event in self.sistema.eventos:
@@ -155,6 +161,8 @@ class Final(State):
         if self.button_salvar.collidepoint((mx, my)):
             if self.sistema.click:
                 self.sistema.salvar(self.nome)
+                sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada.mp3')
+                sword.play()
 
                 self.sistema.reiniciar_jogo()
                 self.sistema.proximo_estado(Menu(self.sistema))

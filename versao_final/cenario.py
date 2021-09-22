@@ -1,7 +1,7 @@
 from tela import tela
 from poder import InvPoder, VidaPoder
 from random import choice
-from animacao import EstaticoCoracao, AnimacaoFundo
+from animacao import EstaticoCoracao, EstaticoFundo
 import pygame
 
 
@@ -19,8 +19,9 @@ class Cenario:
 
         self.__posicao_fundo = [0, 0]
         self.__posicao_fundo_inv = [928, 0]
-        self.__fundos = pygame.sprite.Group(AnimacaoFundo('versao_final/src/backgrounds/fundo_jogo/fundo_nrml/', self.__posicao_fundo),
-                                            AnimacaoFundo('versao_final/src/backgrounds/fundo_jogo/fundo_inv/', self.__posicao_fundo_inv))
+
+        self.__fundo = EstaticoFundo(self.__posicao_fundo, 'versao_final/src/backgrounds/fundo_jogo.jpg')
+        self.__fundo_inv = EstaticoFundo(self.__posicao_fundo_inv, 'versao_final/src/backgrounds/fundo_jogo_inv.jpg')
 
     # Getters e setters
     @property
@@ -69,20 +70,18 @@ class Cenario:
         self.__posicao_fundo[0] -= (0.5 + self.__velocidade_acumulada*dt/3)
         self.__posicao_fundo_inv[0] -= (0.5 + self.__velocidade_acumulada*dt/3)
 
-        fundo_index = 0
-        for posicao in [self.__posicao_fundo, self.__posicao_fundo_inv]:
+        for fundo, posicao in zip([self.__fundo, self.__fundo_inv], [self.__posicao_fundo, self.__posicao_fundo_inv]):
             if posicao[0] <= -928:
                 posicao[0] = 928
 
-            self.__fundos.sprites()[fundo_index].rect.topleft = posicao
-            fundo_index += 1
+            fundo.rect.topleft = posicao
 
 
-    # desenha o chão do jogo
+    # desenha o cenario
     def desenhar(self):
-        self.__fundos.draw(tela.screen)
-        self.__fundos.update()
-        # pygame.draw.line(tela.screen, (255,255,0), (0,578), (928,578), 90)
+        fundos = pygame.sprite.Group(self.__fundo_inv, self.__fundo)
+        fundos.draw(tela.screen)
+        fundos.update()
 
 
     def atualizar(self, dt):
