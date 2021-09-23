@@ -136,6 +136,8 @@ class Final(State):
         self.button_salvar = pygame.Rect(705, 510, 210, 74)
         self.input_box = pygame.Rect(500, 172, 274, 40)
 
+        self.button_menu = pygame.Rect(20, 500, 224 , 74)
+
         self.color_inactive = pygame.Color('white')
         self.color_active = pygame.Color('gray')
         self.color = self.color_inactive
@@ -185,6 +187,13 @@ class Final(State):
                         self.erro_msg = str(e)
                     except Maior15_Caracteres as e:
                         self.erro_msg = str(e)
+        
+        if self.sistema.click and self.button_menu.collidepoint((mx, my)):
+            sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada2.mp3')
+            sword.play()
+
+            self.sistema.reiniciar_jogo()
+            self.sistema.proximo_estado(Menu(self.sistema))
 
         # muda a cor
         self.color = self.color_active if self.active else self.color_inactive

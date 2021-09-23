@@ -77,7 +77,21 @@ class VidaPoder(Poder):
 
     def usar(self, jogador: Jogador):
         if jogador.vida != jogador.vida_maxima:
-            jogador.vida += 1
+            jogador.vida += self.diferencial
+
+
+# poder q aumenta 1 ponto de stamina (+1 ataque de espada)
+class StaminaPoder(Poder):
+    
+    def __init__(self, velocidade: float, posicao: list):
+        super().__init__(diferencial=1,
+                        velocidade=velocidade,
+                        posicao=posicao,
+                        sprite_path='versao_final/src/estaticos/pocao_stamina.png')
+
+    def usar(self, jogador: Jogador):
+        if jogador.stamina != jogador.stamina_maxima:
+            jogador.stamina += self.diferencial
 
 
 # Poder que deixa o jogador invulnerável por 3 segundos

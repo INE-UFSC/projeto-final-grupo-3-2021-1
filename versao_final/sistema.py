@@ -57,7 +57,6 @@ class Sistema(Singleton):
 
     # recria o objeto do jogo
     def reiniciar_jogo(self):
-        del self.__jogo
         self.__jogo = Jogo()
 
 

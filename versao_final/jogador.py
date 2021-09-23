@@ -8,7 +8,7 @@ from animacao import Animacao
 class Jogador(Personagem):
 
     def __init__(self):
-        super().__init__(vida=3, vida_maxima=3, velocidade=400, posicao=[10,420])
+        super().__init__(velocidade=400, posicao=[10,420])
         self.constantes = Constantes()
 
         self.__animacoes = [Animacao((26, 29), 'versao_final/src/cavaleiro/movimento/'),
@@ -26,6 +26,7 @@ class Jogador(Personagem):
         self.__ataque_rect = None
         self.__rect = self.__animacao_atual.sprites()[0].rect
         self.som_pulo = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/pulo.wav')
+        self.som_ataque = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/golpe.wav')
 
 
     @property
@@ -60,6 +61,7 @@ class Jogador(Personagem):
             self.som_pulo.play()
 
         if self.__pulando:
+            self.trocar_animacao(1)
             self.posicao[1] -= self.__velocidade_y*self.__tamanho_pulo * dt  # tamanho do pulo
             self.__velocidade_y -= self.constantes.VELOCIDADE_QUEDA          # velocidade que o jogador cai
             
@@ -72,12 +74,13 @@ class Jogador(Personagem):
 
     # ataque do jogador
     def ataque(self, espaço):
-        if espaço and self.__atacando is False:
+        if espaço and self.__atacando is False and self.__pulando is False and self.stamina > 0:
+            self.stamina -= 1
+            self.som_ataque.play()
             self.__atacando = True
-            self.__ataque_rect = pygame.Rect(self.__rect.x+20, self.__rect.y-5, 10, 10)
-
-        if self.__atacando:
-            self.__ataque_rect.topleft = (self.__rect.x+20, self.__rect.y-5)
+            self.trocar_animacao(2)
+            self.__ataque_rect = pygame.Rect(self.__rect.x+40, self.__rect.y, 50, 50)
+            self.__animacao_atual.sprites()[0].atualizar = True
 
 
     # muda a animação atual se não for a mesma
@@ -88,28 +91,38 @@ class Jogador(Personagem):
 
     # eventos do jogador
     def eventos(self):
+
+        # evento pulando
+        if self.__pulando:
+            self.__atacando = False
+            self.__ataque_rect = None
         
         # evento de invulnerabilidade
         if self.invulneravel:            
             self.mostrar = not self.mostrar
+            self.__atacando = False
+            self.__ataque_rect = None
             
             if pygame.time.get_ticks() - self.tempo_inicial_inv >= self.tempo_inv:
                 self.invulneravel = False
                 self.mostrar = True
-
-        # evento de pulo
-        if self.__pulando:
-            self.trocar_animacao(1)
         
         # evento de ataque
         if self.__atacando:
-            self.trocar_animacao(2)
+            self.__ataque_rect.x = self.__rect.x+40 
+            self.__ataque_rect.y = self.__rect.y
+
+            # pygame.draw.rect(tela.screen, pygame.Color("white"), self.__ataque_rect)
 
             if self.__animacao_atual.sprites()[0].atualizar is False:
                 self.trocar_animacao(0)
+                self.__atacando = False
+                self.__ataque_rect = None
 
         # evento padrão (movendo)
         else:
+            self.__atacando = False
+            self.__ataque_rect = None
             self.trocar_animacao(0)
 
 

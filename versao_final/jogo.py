@@ -7,14 +7,14 @@ from constantes import Constantes
 
 class Jogo():
 
-    def __init__(self, cenario=Cenario([Morcego([928,330], 380),
+    def __init__(self, cenario=Cenario([Morcego([928,330], 420),
                                         Golem([1300,400], 380)])):
 
         self.__jogador = Jogador()          # objeto do jogador
         self.__cenario = cenario            # objeto do cenário
         self.__pontuacao = 0                # pontuação atual do jogo
         self.__final = False
-        self.som_bateu = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.mp3')
+        self.som_bateu = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.wav')
         self.som_pegou_vida = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/vida.mp3')
 
     # Getters e setters
@@ -42,12 +42,12 @@ class Jogo():
         for obs in self.__cenario.obstaculos:
 
             # jogador e obstaculos
-            if self.__jogador.rect.colliderect(obs.rect) and self.__jogador.invulneravel is False:
+            if self.__jogador.rect.colliderect(obs.rect) and self.__jogador.invulneravel is False and obs.vivo:
                 
                 self.__jogador.tornar_invulneravel_por()
                 # perde uma vida (tira 1 coraçao na tela) e faz um som
                 self.__jogador.vida -= 1
-                hit = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.mp3')
+                hit = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.wav')
                 self.som_bateu.play()
 
             # obstaculos e ataque
@@ -80,6 +80,11 @@ class Jogo():
             self.__cenario.coracoes[vida_index].draw(tela.screen)
             self.__cenario.coracoes[vida_index].update()
 
+    # desenho da stamina (barrinha)
+    def desenhar_stamina(self):
+        self.__cenario.barras_stamina[self.__jogador.stamina].draw(tela.screen)
+        self.__cenario.barras_stamina[self.__jogador.stamina].update()
+
 
     # Responsável por atualizar tudo dentro do jogo, AKA Update Function
     def atualizar(self, dt):
@@ -88,6 +93,7 @@ class Jogo():
             self.__jogador.atualizar(dt)    # atualiza o jogador
             self.checar_colisao()           # checa as colisões dos obstáculos e poderes com o jogador
             self.desenhar_vidas()           # desenha as vidas do jogador na tela, com base no número atual de vidas
+            self.desenhar_stamina()         # desenha a barra de stamina x, sendo x o número da stamina atual
             self.pontuar(dt)                # pontua jogo e imprime a pontuação
         else:
             self.__final = True

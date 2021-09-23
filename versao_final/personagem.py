@@ -4,16 +4,26 @@ from abc import ABC
 # CLASSE ABSTRATA
 class Personagem(ABC):
 
-    def __init__(self, vida, vida_maxima, velocidade, posicao):
+    def __init__(self, posicao, velocidade):
         self.__cor = (255, 0, 0)
         self.__mostrar = True
-        self.__vida = vida
-        self.__vida_maxima = vida_maxima
+        self.__vida = 3
+        self.__stamina = 3
+        self.__stamina_maxima = 3
+        self.__vida_maxima = 3
         self.__invulneravel = False
         self.__tempo_inicial_inv = 0
         self.__tempo_inv = 0
         self.__velocidade = velocidade
         self.__posicao = posicao
+
+
+    # Torna o Personagem invulnerável por um determinado tempo, que assume 0.5 segundos caso o valor não for especificado
+    def tornar_invulneravel_por(self, tempo_inv=500):
+        self.__tempo_inicial_inv = pygame.time.get_ticks()
+        self.__tempo_inv = tempo_inv
+        self.__invulneravel = True
+
 
     # getters
     @property
@@ -27,6 +37,14 @@ class Personagem(ABC):
     @property
     def vida(self) -> int:
         return self.__vida
+
+    @property
+    def stamina(self) -> int:
+        return self.__stamina
+
+    @property
+    def stamina_maxima(self) -> int:
+        return self.__stamina_maxima
 
     @property
     def vida_maxima(self) -> int:
@@ -77,6 +95,10 @@ class Personagem(ABC):
     def vida(self, vida: int):
         self.__vida = vida
 
+    @stamina.setter
+    def stamina(self, stamina: int):
+        self.__stamina = stamina
+
     @velocidade.setter
     def velocidade(self, nova: int):
         self.__velocidade = nova
@@ -84,10 +106,3 @@ class Personagem(ABC):
     @posicao.setter
     def posicao(self, nova):
         self.__posicao = nova
-
-    # Torna o Personagem invulnerável por um determinado tempo, que assume 0.5 segundos caso o valor não for especificado
-    def tornar_invulneravel_por(self, tempo_inv=500):
-        self.__tempo_inicial_inv = pygame.time.get_ticks()
-        self.__tempo_inv = tempo_inv
-        self.__invulneravel = True
-        

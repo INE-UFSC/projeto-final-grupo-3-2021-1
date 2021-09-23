@@ -31,6 +31,10 @@ class Obstaculo():
     @property
     def rect(self):
         return self.__rect
+        
+    @property
+    def vivo(self):
+        return self.__vivo
 
     @velocidade.setter
     def velocidade(self, nova):
@@ -44,19 +48,20 @@ class Obstaculo():
 
     # movimenta o obstaculo
     def movimento(self, dt, aparecer: int):
-        if self.__vivo:
-            self.__posicao[0] -= self.__velocidade * dt
-            if self.__posicao[0] <= -80:
-                self.__posicao[0] = aparecer
+        self.__posicao[0] -= self.__velocidade * dt
+        if self.__posicao[0] <= -80:
+            self.__posicao[0] = aparecer
 
     # acompanha eventos do obstaculo
     def eventos(self):
         if self.__vivo is False and self.__animacao_atual.sprites()[0].atualizar is False:
             self.__mostrar = False
 
-            if pygame.time.get_ticks() - self.__tempo_inicial_morto < 3:
+            if pygame.time.get_ticks() - self.__tempo_inicial_morto >= 500:
                 self.__vivo = True
                 self.__mostrar = True
+                self.__animacao_atual.sprites()[0].atualizar = True
+                self.__posicao[0] = -100
                 self.trocar_animacao(0)
 
     # desenha o obstaculo
