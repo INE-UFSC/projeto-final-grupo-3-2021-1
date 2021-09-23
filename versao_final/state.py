@@ -55,6 +55,8 @@ class Menu(State):
         if self.sistema.click:
             for bttn in [self.button_jogar, self.button_ranking, self.button_sair]:
                 if bttn.collidepoint((mx, my)):
+                    sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada2.mp3')
+                    sword.play()
                     if bttn == self.button_jogar: 
                         proximo_estado = Jogando(self.sistema)
                     elif bttn == self.button_ranking:
@@ -81,7 +83,7 @@ class Jogando(State):
         self.sistema.jogo.atualizar(self.sistema.dt)
 
         # quando o jogador fica sem vida, é passado para o proximo estado
-        if self.sistema.jogo.jogador.vida <= 0:
+        if self.sistema.jogo.final:
             self.sistema.proximo_estado(Final(self.sistema))
 
 # HERANÇA de State, mostra as miores pontuaçoes dos players
@@ -109,6 +111,8 @@ class Ranking(State):
             posicao_y += 30
 
         if self.sistema.click and self.button_voltar.collidepoint((mx, my)):
+            sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada2.mp3')
+            sword.play()
             self.sistema.proximo_estado(Menu(self.sistema))
 
 # HERANÇA de State, tela de lose
@@ -155,6 +159,8 @@ class Final(State):
         if self.button_salvar.collidepoint((mx, my)):
             if self.sistema.click:
                 self.sistema.salvar(self.nome)
+                sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada2.mp3')
+                sword.play()
 
                 self.sistema.reiniciar_jogo()
                 self.sistema.proximo_estado(Menu(self.sistema))

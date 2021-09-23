@@ -1,20 +1,21 @@
-from animacao import AnimacaoGolem, AnimacaoMorcego
+from animacao import Animacao, AnimacaoGolem, AnimacaoMorcego
 import pygame
 from tela import tela
+from random import randint
 
 
-class Obstaculo(pygame.sprite.Sprite):
+class Obstaculo():
 
-    def __init__(self, posicao: list, velocidade: int, tipo: str):
+    def __init__(self, posicao: list, velocidade: int, animacoes: list):
+        self.__vivo = True
         self.__posicao = posicao
+        self.__aparecer_entre = (1228, 1500)
         self.__velocidade = velocidade
-        self.__tipo = tipo
         
-        self.__animacao_morcego = pygame.sprite.Group(AnimacaoMorcego())
-        self.rect_morcego = self.__animacao_morcego.sprites()[0].rect
+        self.__animacoes = animacoes
+        self.__animacao_atual = pygame.sprite.Group(self.__animacoes[0])
+        self.__rect = self.__animacao_atual.sprites()[0].rect
 
-        self.__animacao_golem = pygame.sprite.Group(AnimacaoGolem())
-        self.rect_golem = self.__animacao_golem.sprites()[0].rect
 
     # Getters e setters
     @property
@@ -26,39 +27,61 @@ class Obstaculo(pygame.sprite.Sprite):
         return self.__posicao
 
     @property
-    def retangulo(self):
-        return self.__retangulo
+    def rect(self):
+        return self.__rect
 
     @velocidade.setter
     def velocidade(self, nova):
         self.__velocidade = nova
 
+
+    # troca a animacao
+    def trocar_animacao(self, animacao_index: int):
+        if self.__animacao_atual.index(self.__animacao_atual.sprites()[0]) != animacao_index:
+            self.__animacao_atual = pygame.sprite.Group(self.__animacoes[animacao_index])
+
     # movimenta o obstaculo
     def movimento(self, dt, aparecer: int):
-       self.__posicao[0] -= self.__velocidade * dt
-       if self.__posicao[0] <= -80:
-           self.__posicao[0] = aparecer
-        #    self.__velocidade += 10
+        if self.__vivo:
+            self.__posicao[0] -= self.__velocidade * dt
+            if self.__posicao[0] <= -80:
+                self.__posicao[0] = aparecer
 
-    # desenha os obstaculos
+    # desenha o obstaculo
     def desenhar(self):
-        if self.__tipo == "Morcego":
-            self.__animacao_morcego.sprites()[0].rect.topleft = self.posicao
-            self.rect_morcego = self.__animacao_morcego.sprites()[0].rect
-            self.__animacao_morcego.draw(tela.screen)
+        self.__animacao_atual.sprites()[0].rect.topleft = self.posicao
+        self.__rect = self.__animacao_atual.sprites()[0].rect
+        self.__animacao_atual.draw(tela.screen)
 
-        if self.__tipo == "Golem":
-            self.__animacao_golem.sprites()[0].rect.topleft = self.posicao
-            self.rect_golem = self.__animacao_golem.sprites()[0].rect
-            self.__animacao_golem.draw(tela.screen)
+        self.__animacao_atual.update()
 
-        self.__animacao_morcego.update()
-        self.__animacao_golem.update()
-        # pygame.draw.rect(tela.screen, (0, 255, 0), self.__retangulo)
-        # self.__retangulo = pygame.Rect(self.__posicao[0], self.__posicao[1], self.__tamanho[0], self.__tamanho[1])
+        if self.__vivo is False:
+            pass
 
-    # atualiza os obsculos
+    # reseta a posicao, não "mata" de verdade
+    def matar(self):
+        self.__vivo = False
+        self.trocar_animacao(1)
+        
+    # main loop
     def atualizar(self, dt):
         self.desenhar()
-        self.movimento(dt, 1228)
+        self.movimento(dt, randint(self.__aparecer_entre[0], self.__aparecer_entre[1]))
 
+
+class Morcego(Obstaculo):
+    
+    def __init__(self, posicao: list, velocidade: int):
+        super().__init__(posicao,
+                        velocidade,
+                        [Animacao((29, 17), 'versao_final/src/morcego/movimento/'),
+                        Animacao((29, 17), 'versao_final/src/morcego/morte/')])
+
+
+class Golem(Obstaculo):
+    
+    def __init__(self, posicao: list, velocidade: int):
+        super().__init__(posicao,
+                        velocidade,
+                        [Animacao((34, 38), 'versao_final/src/golem/movimento/'),
+                        Animacao((34, 38), 'versao_final/src/golem/morte/')])

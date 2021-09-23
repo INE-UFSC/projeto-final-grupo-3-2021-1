@@ -10,6 +10,7 @@ class Constantes(Singleton):
         self.limite_chao = 420
         self.velocidade_queda = 0.06
         self.velocidade = 10
+        self.atualizar_sprite = 0.030
         # self.font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 32)
 
 # class ConstantesVisuais(Singleton):

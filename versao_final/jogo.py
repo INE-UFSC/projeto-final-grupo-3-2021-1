@@ -1,13 +1,16 @@
 from jogador import Jogador
 from cenario import Cenario
 from obstaculo import Obstaculo
+from animacao import AnimacaoMorcego, AnimacaoGolem
 from tela import tela
 import pygame
 from constantes import Constantes
 
 class Jogo():
 
-    def __init__(self, cenario=Cenario([Obstaculo([928,330], 380, "Morcego"), Obstaculo([1300,400], 380, "Golem")])):
+    def __init__(self, cenario=Cenario([Obstaculo([928,330], 380, AnimacaoMorcego()),
+                                        Obstaculo([1300,400], 380, AnimacaoGolem())]
+                                        )):
         self.__jogador = Jogador()          # objeto do jogador
         self.__cenario = cenario            # objeto do cenário
         self.__pontuacao = 0                # pontuação atual do jogo
@@ -26,31 +29,31 @@ class Jogo():
     def final(self):
         return self.__final
 
-    @final.setter
-    def final(self, final):
-        self.__final = final
-
     @property
     def pontuacao(self):
         return self.__pontuacao
 
 
-    # checa as colisões entre obstaculos e poderes e o jogador
+    # checa as colisões entre obstaculos, poderes e o jogador
     def checar_colisao(self):
 
         # obstáculos
         for obs in self.__cenario.obstaculos:
-            if (self.__jogador.rect.colliderect(obs.rect_golem) or
-                self.__jogador.rect.colliderect(obs.rect_morcego)) and self.__jogador.invulneravel is False:
+
+            # jogador e obstaculos
+            if self.__jogador.rect.colliderect(obs.rect) and self.__jogador.invulneravel is False:
                 
                 self.__jogador.tornar_invulneravel_por()
                 # perde uma vida (tira 1 coraçao na tela) e faz um som
                 self.__jogador.vida -= 1
                 hit = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.mp3')
                 hit.play()
-                
-                
 
+            # obstaculos e ataque
+            if self.__jogador.ataque_rect != None:
+                if self.__jogador.ataque_rect.colliderect(obs.rect):
+                    obs.matar()
+                
         # poder
         if self.__cenario.poder_na_tela != None:
             if self.__jogador.rect.colliderect(self.__cenario.poder_na_tela.retangulo):
@@ -58,7 +61,6 @@ class Jogo():
                 self.__cenario.poder_na_tela = None
                 power = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/vida.mp3')
                 power.play()
-
 
 
     # Pontua e mostra a pontuação com base no tempo de jogo e na velocidade dos obstaculos
