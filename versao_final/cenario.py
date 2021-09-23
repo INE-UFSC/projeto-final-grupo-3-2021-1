@@ -65,7 +65,6 @@ class Cenario:
 
     # acelera todos os objetos do cenário até um certo valor (obstáculos e poderes)
     def acelerar(self):
-        print(self.__velocidade_acumulada)
         if self.__velocidade_acumulada < 200:
             if self.obstaculos[0].posicao[0] <= -39:
                 for obs in self.__obstaculos:
@@ -78,8 +77,8 @@ class Cenario:
 
     # funçao que movimenta o cenario
     def mover_cenario(self, dt):
-        self.__posicao_fundo[0] -= (0.5 + self.__velocidade_acumulada/3)
-        self.__posicao_fundo_inv[0] -= (0.5 + self.__velocidade_acumulada/3)
+        self.__posicao_fundo[0] -= (0.5 + self.__velocidade_acumulada*dt/3)
+        self.__posicao_fundo_inv[0] -= (0.5 + self.__velocidade_acumulada*dt/3)
 
         for fundo, posicao in zip(self.__fundos.sprites(), [self.__posicao_fundo, self.__posicao_fundo_inv]):
             if posicao[0] <= -928:
