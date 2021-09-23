@@ -24,7 +24,7 @@ class Jogador(Personagem):
         self.__ataque_rect = None
         
         #self.__imagem = cavaleiro.animacao_jogador_movendo[cavaleiro.imagem_atual]
-        self.__rect = self.__animacao.sprites()[0].rect
+        self.__rect = self.__animacao_atual.sprites()[0].rect
 
 
     @property
@@ -80,7 +80,7 @@ class Jogador(Personagem):
 
 
     def trocar_animacao(self, animacao_index: int):
-        if self.__animacao_atual.index(self.__animacao_atual.sprites()[0]) != animacao_index:
+        if self.__animacoes.index(self.__animacao_atual.sprites()[0]) != animacao_index:
             self.__animacao_atual = pygame.sprite.Group(self.__animacoes[animacao_index])
         
 
@@ -117,7 +117,7 @@ class Jogador(Personagem):
         if self.mostrar:
             self.__animacao_atual.draw(tela.screen)
         
-        self.__animacao_atual.update(self.__pulando)
+        self.__animacao_atual.update()
 
 
     # Função de loop do jogador que entra no loop do jogo

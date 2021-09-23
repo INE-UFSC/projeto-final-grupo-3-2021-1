@@ -1,4 +1,4 @@
-from animacao import Animacao, AnimacaoGolem, AnimacaoMorcego
+from animacao import Animacao
 import pygame
 from tela import tela
 from random import randint
@@ -37,7 +37,9 @@ class Obstaculo():
 
     # troca a animacao
     def trocar_animacao(self, animacao_index: int):
-        if self.__animacao_atual.index(self.__animacao_atual.sprites()[0]) != animacao_index:
+        if self.__animacoes.index(self.__animacao_atual.sprites()[0]) != animacao_index:
+            print(self.__animacoes.index(self.__animacao_atual.sprites()[0]))
+            print(animacao_index)
             self.__animacao_atual = pygame.sprite.Group(self.__animacoes[animacao_index])
 
     # movimenta o obstaculo

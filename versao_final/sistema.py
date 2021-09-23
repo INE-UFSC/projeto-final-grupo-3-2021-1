@@ -30,8 +30,6 @@ class Sistema(Singleton):
         self.__clock = pygame.time.Clock()          # pygame clock
         self.__dt = 0                               # tempo de um frame (delta time)
 
-        # self.menu()
-
 
     # main loop da janela
     def __main(self):

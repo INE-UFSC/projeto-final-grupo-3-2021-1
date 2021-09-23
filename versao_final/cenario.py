@@ -1,7 +1,7 @@
 from tela import tela
 from poder import InvPoder, VidaPoder
 from random import choice
-from animacao import EstaticoCoracao, AnimacaoFundo
+from animacao import EstaticoCoracao, EstaticoFundo
 import pygame
 
 
@@ -19,8 +19,8 @@ class Cenario:
 
         self.__posicao_fundo = [0, 0]
         self.__posicao_fundo_inv = [928, 0]
-        self.__fundos = pygame.sprite.Group(AnimacaoFundo('versao_final/src/backgrounds/fundo_jogo/fundo_nrml/', self.__posicao_fundo),
-                                            AnimacaoFundo('versao_final/src/backgrounds/fundo_jogo/fundo_inv/', self.__posicao_fundo_inv))
+        self.__fundos = pygame.sprite.Group(EstaticoFundo(self.__posicao_fundo, 'versao_final/src/backgrounds/fundo_jogo.jpg'),
+                                            EstaticoFundo(self.__posicao_fundo_inv, 'versao_final/src/backgrounds/fundo_jogo_inv.jpg'))
 
     # Getters e setters
     @property
@@ -56,7 +56,6 @@ class Cenario:
     # acelera todos os objetos do cenário (obstáculos e poderes)
     def acelerar(self):
         if self.obstaculos[0].posicao[0] <= -39:
-            print(self.__velocidade_acumulada)
             for obs in self.__obstaculos:
                 obs.velocidade += self.__aceleracao
             self.__velocidade_acumulada += self.__aceleracao
@@ -64,26 +63,23 @@ class Cenario:
             if self.poder_na_tela != None:
                 self.__poder_na_tela.velocidade += self.__aceleracao
 
+
     # funçao que movimenta o cenario
     def mover_cenario(self, dt):
         self.__posicao_fundo[0] -= (0.5 + self.__velocidade_acumulada*dt/3)
         self.__posicao_fundo_inv[0] -= (0.5 + self.__velocidade_acumulada*dt/3)
 
-        fundo_index = 0
-        for posicao in [self.__posicao_fundo, self.__posicao_fundo_inv]:
+        for fundo, posicao in zip(self.__fundos.sprites(), [self.__posicao_fundo, self.__posicao_fundo_inv]):
             if posicao[0] <= -928:
                 posicao[0] = 928
 
-            self.__fundos.sprites()[fundo_index].rect.topleft = posicao
-            fundo_index += 1
+            fundo.rect.topleft = posicao
 
 
     # desenha o chão do jogo
     def desenhar(self):
         self.__fundos.draw(tela.screen)
         self.__fundos.update()
-        # pygame.draw.line(tela.screen, (255,255,0), (0,578), (928,578), 90)
-
 
     def atualizar(self, dt):
         self.desenhar()

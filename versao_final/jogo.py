@@ -1,16 +1,15 @@
 from jogador import Jogador
 from cenario import Cenario
-from obstaculo import Obstaculo
-from animacao import AnimacaoMorcego, AnimacaoGolem
+from obstaculo import Morcego, Golem
 from tela import tela
 import pygame
 from constantes import Constantes
 
 class Jogo():
 
-    def __init__(self, cenario=Cenario([Obstaculo([928,330], 380, AnimacaoMorcego()),
-                                        Obstaculo([1300,400], 380, AnimacaoGolem())]
-                                        )):
+    def __init__(self, cenario=Cenario([Morcego([928,330], 380),
+                                        Golem([1300,400], 380)])):
+
         self.__jogador = Jogador()          # objeto do jogador
         self.__cenario = cenario            # objeto do cenário
         self.__pontuacao = 0                # pontuação atual do jogo
