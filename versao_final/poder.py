@@ -84,6 +84,7 @@ class VidaPoder(Poder):
 class InvPoder(Poder):
 
     def __init__(self, velocidade: float, posicao: list):
+        self.som_invencivel = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/invenc.mp3')
         super().__init__(diferencial=3000,
                         velocidade=velocidade,
                         posicao=posicao,
@@ -91,6 +92,5 @@ class InvPoder(Poder):
 
     # funçao que é chamado quando o jogador pega o poder, criando um som e chamando a funçao da invulnerabilidade
     def usar(self, jogador: Jogador):
-        invencivel = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/invenc.mp3')
-        invencivel.play(3)
+        self.som_invencivel.play(3)
         jogador.tornar_invulneravel_por(self.diferencial)

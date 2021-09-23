@@ -40,8 +40,8 @@ class Sistema(Singleton):
             self.__clock.tick(300)
             self.__estado.executar()
 
-            self.atualizar_tela()
             self.track_eventos()
+            self.atualizar_tela()
 
 
     # inicia o loop com o estado inicial sendo o menu

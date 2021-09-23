@@ -14,6 +14,8 @@ class Jogo():
         self.__cenario = cenario            # objeto do cenário
         self.__pontuacao = 0                # pontuação atual do jogo
         self.__final = False
+        self.som_bateu = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.mp3')
+        self.som_pegou_vida = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/vida.mp3')
 
     # Getters e setters
     @property
@@ -46,20 +48,19 @@ class Jogo():
                 # perde uma vida (tira 1 coraçao na tela) e faz um som
                 self.__jogador.vida -= 1
                 hit = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.mp3')
-                hit.play()
+                self.som_bateu.play()
 
             # obstaculos e ataque
             if self.__jogador.ataque_rect != None:
                 if self.__jogador.ataque_rect.colliderect(obs.rect):
                     obs.matar()
                 
-        # poder
+        # poder vida
         if self.__cenario.poder_na_tela != None:
             if self.__jogador.rect.colliderect(self.__cenario.poder_na_tela.retangulo):
                 self.__cenario.poder_na_tela.usar(self.__jogador)
                 self.__cenario.poder_na_tela = None
-                power = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/vida.mp3')
-                power.play()
+                self.som_pegou_vida.play()
 
 
     # Pontua e mostra a pontuação com base no tempo de jogo e na velocidade dos obstaculos

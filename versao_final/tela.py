@@ -9,6 +9,9 @@ class Tela(Singleton):
         super().__init__()
         self.display = display
         pygame.display.set_caption("Quebra Ossos")
+        
+        logo = pygame.image.load('versao_final/src/logo/logo.png')
+        pygame.display.set_icon(logo)
 
         # setup da janela
         self.screen = pygame.display.set_mode(display)

@@ -5,12 +5,12 @@ import pygame
 class Constantes(Singleton):
     def __init__(self):
         super().__init__()
-        self.limite_esquerda = 0
-        self.limite_direita = 908
-        self.limite_chao = 420
-        self.velocidade_queda = 0.06
-        self.velocidade = 10
-        self.atualizar_sprite = 0.030
+        self.LIMITE_ESQUERDA = 0
+        self.LIMITE_DIREITA = 908
+        self.LIMITE_CHAO = 420
+        self.VELOCIDADE_QUEDA = 0.06
+        self.VELOCIDADE = 10
+        
         # self.font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 32)
 
 # class ConstantesVisuais(Singleton):

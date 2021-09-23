@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 from tela import tela
 import pygame
 import sys
+from nome_vazioException import NomeVazio
+from maior15_Exception import Maior15_Caracteres
 
 # Classe Abstrata
 class State(ABC):
@@ -86,7 +88,7 @@ class Jogando(State):
         if self.sistema.jogo.final:
             self.sistema.proximo_estado(Final(self.sistema))
 
-# HERANÇA de State, mostra as miores pontuaçoes dos players
+# HERANÇA de State, mostra as maiores pontuaçoes dos players
 class Ranking(State):
 
     def __init__(self, sistema,
@@ -96,7 +98,7 @@ class Ranking(State):
         super().__init__(sistema, fundo, musica)
         self.sistema.atualizar_posicoes()
 
-        self.font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 20)
+        self.font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 24)
         self.texto_ranks = [self.font.render(f"{i+1} - {self.sistema.ranking[i][0]}:"+"{:.1f}".format(self.sistema.ranking[i][1]), True, pygame.Color('white')) for i in range(len(self.sistema.ranking))]
         self.button_voltar = pygame.Rect(20, 500, 224 , 74)
 
@@ -105,10 +107,15 @@ class Ranking(State):
         self.sistema.desenhar_fundo()
         mx, my = pygame.mouse.get_pos()
 
+        na_tela = 0
         posicao_y = 170
         for text in self.texto_ranks:
-            tela.screen.blit(text, (310, posicao_y))
-            posicao_y += 30
+            if na_tela == 5:
+                break
+
+            tela.screen.blit(text, (240, posicao_y))
+            posicao_y += 40
+            na_tela += 1
 
         if self.sistema.click and self.button_voltar.collidepoint((mx, my)):
             sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada2.mp3')
@@ -135,6 +142,8 @@ class Final(State):
 
         self.active = False
         self.nome = ''
+        
+        self.erro_msg = ''
 
     # Executa a tela final do jogo após perder todas as vidas
     def executar(self):
@@ -142,7 +151,6 @@ class Final(State):
         mx, my = pygame.mouse.get_pos()
 
         if self.sistema.click:
-            # Toggle the active variable.
             self.active = self.input_box.collidepoint((mx, my))
 
         if self.active:
@@ -157,24 +165,45 @@ class Final(State):
 
         # botao de salvar o nick do jogador, reiniciar o jogo, e passa para o proximo estado 
         if self.button_salvar.collidepoint((mx, my)):
-            if self.sistema.click:
-                self.sistema.salvar(self.nome)
-                sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada2.mp3')
-                sword.play()
+                if self.sistema.click:
+                    #tratamento de excesões de nome vazio e nome > que 15 caracteres
+                    try:
+                        if self.nome != '':
+                            if len(self.nome) <= 15:
+                                self.sistema.salvar(self.nome)
+                                sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada2.mp3')
+                                sword.play()
 
-                self.sistema.reiniciar_jogo()
-                self.sistema.proximo_estado(Menu(self.sistema))
+                                self.sistema.reiniciar_jogo()
+                                self.sistema.proximo_estado(Menu(self.sistema))
 
+                            else:
+                                raise Maior15_Caracteres
+                        else:
+                            raise NomeVazio
+                    except NomeVazio as e:
+                        self.erro_msg = str(e)
+                    except Maior15_Caracteres as e:
+                        self.erro_msg = str(e)
 
         # muda a cor
         self.color = self.color_active if self.active else self.color_inactive
 
         # renderiza texto
-        txt_surface = self.font.render(self.nome, True, self.color)
         txt_pontuacao = self.font.render("{:.1f}".format(self.sistema.jogo.pontuacao), True, pygame.Color("white"))
+        txt_nome = self.font.render(self.nome, True, pygame.Color("white"))
 
-        # desenha
-        tela.screen.blit(txt_surface, (self.input_box.x+5, self.input_box.y+10))
+        # desenha nome digitado
+        tela.screen.blit(txt_nome, (self.input_box.x+5, self.input_box.y+10))
+
+        # desenha pontuacao
         tela.screen.blit(txt_pontuacao, (400, 238))
+
+        # caixa de input
         pygame.draw.rect(tela.screen, self.color, self.input_box, 2)
+
+        # texto de erro e desenho
+        txt_exception = self.font.render(self.erro_msg, True, pygame.Color("red"))
+        tela.screen.blit(txt_exception, (190, 300))
+
 

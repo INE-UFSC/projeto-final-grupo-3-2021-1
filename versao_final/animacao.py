@@ -2,15 +2,13 @@ import pygame
 import abc
 import os
 from copy import copy
-
 from pygame import constants
 from constantes import Constantes
 
-#constante = 0.030 #tempo de velocidade de sprites
 
 class Animacao(pygame.sprite.Sprite):
 
-    def __init__(self, dimensao, path, velocidade=0.03):
+    def __init__(self, dimensao, path, velocidade=0.03, rodar_uma_vez=False):
         pygame.sprite.Sprite.__init__(self)
         self.sprites = []
 
@@ -21,6 +19,9 @@ class Animacao(pygame.sprite.Sprite):
         
         self.sprite_atual_index = 0
         self.velocidade_troca_sprite = velocidade
+
+        self.rodar_uma_vez = rodar_uma_vez
+        self.atualizar = True
 
         self.sprite_atual = self.sprites[self.sprite_atual_index]
         self.rect = self.sprite_atual.get_rect()
@@ -43,15 +44,19 @@ class Animacao(pygame.sprite.Sprite):
         self.image = self.sprite_atual
 
 
-    # troca de sprite com base na velocidade, retorna rect do sprite atual
+    # troca de sprite com base na velocidade
     def update(self):
-        self.sprite_atual_index += self.velocidade_troca_sprite
+        if self.atualizar:
+            self.sprite_atual_index += self.velocidade_troca_sprite
 
-        if self.sprite_atual_index >= len(self.sprites):
-            self.sprite_atual_index = 0
+            if self.sprite_atual_index >= len(self.sprites):
+                self.sprite_atual_index = 0
 
-        self.sprite_atual = self.sprites[int(self.sprite_atual_index) - 1] 
-        self.processar_sprite()
+                if self.rodar_uma_vez:
+                    self.atualizar = False
+
+            self.sprite_atual = self.sprites[int(self.sprite_atual_index) - 1] 
+            self.processar_sprite()
 
  
 # class Animacao(pygame.sprite.Sprite, abc.ABC):
