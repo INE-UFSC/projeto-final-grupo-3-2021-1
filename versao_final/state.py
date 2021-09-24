@@ -11,6 +11,7 @@ class State(ABC):
 
     def __init__(self, sistema, fundo, musica):
         self._sistema = sistema
+        self._efeito_sonoro = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada2.mp3')
         self.__setup(fundo, musica)
 
     def __setup(self, fundo, musica):
@@ -27,6 +28,10 @@ class State(ABC):
     @property
     def sistema(self):
         return self._sistema
+
+    @property
+    def efeito_sonoro(self):
+        return self._efeito_sonoro
 
     @sistema.setter
     def sistema(self, sistema):
@@ -46,7 +51,6 @@ class Menu(State):
 
         super().__init__(sistema, fundo, musica)
         self.sistema.tocar_musica(loop=True)
-        self.sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada2.mp3')
         self.button_jogar = pygame.Rect(40, 180, 374 , 94)
         self.button_ranking = pygame.Rect(40, 280, 374 , 94)
         self.button_sair = pygame.Rect(40, 380, 374 , 94)
@@ -62,13 +66,13 @@ class Menu(State):
         if self.sistema.click:
             for bttn in [self.button_jogar, self.button_ranking, self.button_sair]:
                 if bttn.collidepoint((mx, my)):
-                    self.sword.play()
+                    self.efeito_sonoro.play()
                     if bttn == self.button_jogar: 
                         proximo_estado = Jogando(self.sistema)
                     elif bttn == self.button_ranking:
                         proximo_estado = Ranking(self.sistema)
                     elif bttn == self.button_sair:
-                        self.sistema.sair()
+                        sys.exit()
 
         # passa para o proximo estado
         if proximo_estado != None:
@@ -101,8 +105,7 @@ class Ranking(State):
                         musica=None):
 
         super().__init__(sistema, fundo, musica)
-        self.sistema.atualizar_posicoes()
-        self.sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada2.mp3')
+        self.sistema.atualizar_ranking()
         self.font = pygame.font.Font('versao_final/src/fonte/pressstart.ttf', 24)
         self.texto_ranks = [self.font.render(f"{i+1} - {self.sistema.ranking[i][0]}:"+"{:.1f}".format(self.sistema.ranking[i][1]), True, pygame.Color('white')) for i in range(len(self.sistema.ranking))]
         self.button_voltar = pygame.Rect(20, 500, 224 , 74)
@@ -123,7 +126,7 @@ class Ranking(State):
             na_tela += 1
 
         if self.sistema.click and self.button_voltar.collidepoint((mx, my)):
-            self.sword.play()
+            self.efeito_sonoro.play()
             self.sistema.proximo_estado(Menu(self.sistema))
 
 # HERANÇA de State, tela de lose
@@ -146,7 +149,6 @@ class Final(State):
         self.active = False
         self.nome = ''
         self.erro_msg = ''
-        self.sword = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/espada2.mp3')
 
     # Executa a tela final do jogo após perder todas as vidas
     def executar(self):
@@ -174,7 +176,7 @@ class Final(State):
                         if self.nome != '':
                             if len(self.nome) <= 15:
                                 self.sistema.salvar(self.nome)
-                                self.sword.play()
+                                self.efeito_sonoro.play()
 
                                 self.sistema.reiniciar_jogo()
                                 self.sistema.proximo_estado(Menu(self.sistema))
@@ -190,7 +192,7 @@ class Final(State):
         
         # som ao clicar no botao
         if self.sistema.click and self.button_menu.collidepoint((mx, my)):
-            self.sword.play()
+            self.efeito_sonoro.play()
 
             self.sistema.reiniciar_jogo()
             self.sistema.proximo_estado(Menu(self.sistema))

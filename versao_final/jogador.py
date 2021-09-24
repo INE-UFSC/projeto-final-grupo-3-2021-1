@@ -88,17 +88,10 @@ class Jogador(Personagem):
 
     # eventos do jogador
     def eventos(self):
-
-        # evento pulando
-        if self.__pulando:
-            self.__atacando = False
-            self.__ataque_rect = None
         
         # evento de invulnerabilidade
         if self.invulneravel:            
             self.mostrar = not self.mostrar
-            self.__atacando = False
-            self.__ataque_rect = None
             
             if pygame.time.get_ticks() - self.tempo_inicial_inv >= self.tempo_inv:
                 self.invulneravel = False

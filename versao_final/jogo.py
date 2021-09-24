@@ -14,8 +14,8 @@ class Jogo():
         self.__cenario = cenario            # objeto do cenário
         self.__pontuacao = 0                # pontuação atual do jogo
         self.__final = False
-        self.som_bateu = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.wav')
-        self.som_pegou_vida = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/vida.mp3')
+        self.__som_bateu = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.wav')
+        self.__som_pegou_poder = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/vida.mp3')
 
 
     # Getters e setters
@@ -48,8 +48,7 @@ class Jogo():
                 self.__jogador.tornar_invulneravel_por()
                 # perde uma vida (tira 1 coraçao na tela) e faz um som
                 self.__jogador.vida -= 1
-                hit = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.wav')
-                self.som_bateu.play()
+                self.__som_bateu.play()
 
             # obstaculos e ataque
             if self.__jogador.ataque_rect != None:
@@ -61,7 +60,7 @@ class Jogo():
             if self.__jogador.rect.colliderect(self.__cenario.poder_na_tela.retangulo):
                 self.__cenario.poder_na_tela.usar(self.__jogador)
                 self.__cenario.poder_na_tela = None
-                self.som_pegou_vida.play()
+                self.__som_pegou_poder.play()
 
 
     # Pontua e mostra a pontuação com base no tempo de jogo e na velocidade dos obstaculos

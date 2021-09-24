@@ -46,11 +46,6 @@ class Sistema(Singleton):
         self.__estado = Menu(self)
         self.__main()
 
-    
-    # fecha a janela
-    def sair(self):
-        sys.exit()
-
 
     # recria o objeto do jogo
     def reiniciar_jogo(self):
@@ -100,7 +95,7 @@ class Sistema(Singleton):
         for event in self.__eventos:
             
             if event.type == pygame.QUIT:
-                self.sair()
+                sys.exit()
             
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:

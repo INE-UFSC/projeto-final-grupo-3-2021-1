@@ -5,7 +5,6 @@ from abc import ABC
 class Personagem(ABC):
 
     def __init__(self, posicao, velocidade):
-        self.__cor = (255, 0, 0)
         self.__mostrar = True
         self.__vida = 3
         self.__stamina = 3

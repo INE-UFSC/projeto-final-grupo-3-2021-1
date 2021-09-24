@@ -13,8 +13,8 @@ class Poder(abc.ABC):
         self.__diferencial = diferencial
         self.__velocidade = velocidade
         self.__posicao = posicao
-        self.__retangulo = pygame.Rect(self.__posicao[0], self.__posicao[1], 10, 10)
-        self.__animacao = pygame.sprite.Group(EstaticoPoder(posicao, sprite_path))
+        self.__rect = pygame.Rect(self.__posicao[0], self.__posicao[1], 10, 10)
+        self.__sprite = pygame.sprite.Group(EstaticoPoder(posicao, sprite_path))
     
 
     # getters
@@ -32,7 +32,7 @@ class Poder(abc.ABC):
 
     @property
     def retangulo(self):
-        return self.__retangulo
+        return self.__rect
 
 
     # setters
@@ -42,7 +42,7 @@ class Poder(abc.ABC):
 
     @retangulo.setter
     def retangulo(self, novo):
-        self.__retangulo = novo
+        self.__rect = novo
 
     @abc.abstractmethod
     def usar(self, jogador: Jogador):
@@ -56,9 +56,9 @@ class Poder(abc.ABC):
 
     # desenha os poderes no chao
     def desenhar(self):
-        self.__animacao.sprites()[0].rect.topleft = self.__posicao
-        self.__retangulo = self.__animacao.sprites()[0].rect
-        self.__animacao.draw(tela.screen)
+        self.__sprite.sprites()[0].rect.topleft = self.__posicao
+        self.__rect = self.__sprite.sprites()[0].rect
+        self.__sprite.draw(tela.screen)
 
 
     def atualizar(self, dt):

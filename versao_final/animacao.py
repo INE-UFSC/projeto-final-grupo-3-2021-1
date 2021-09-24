@@ -57,7 +57,7 @@ class Animacao(pygame.sprite.Sprite):
 
 
 # Classe de sprites que nao possuem alteração de imagens (sem animação, só uma imagem)
-class Estatico(pygame.sprite.Sprite):
+class Estatico(pygame.sprite.Sprite, abc.ABC):
     def __init__(self, posicao, sprite_path, dimensao=None, escala=2, escalar=False):
         pygame.sprite.Sprite.__init__(self)
         self.posicao = posicao
