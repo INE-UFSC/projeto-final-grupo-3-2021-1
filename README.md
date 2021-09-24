@@ -1,4 +1,6 @@
 # Modelo para o Trabalho Final de POO-II
+# README Dentro da pasta do prototipo contendo informações sobre ele.
+
 Esse modelo contém uma estrutura pronta para entrega de todas as etapas do Trabalho Final (TF) de POO-II.
 
 Os alunos deverão desenvolver um jogo interativo e com interface gráfica utilizando todos os conceitos estudados no decorrer da disciplina.
@@ -16,6 +18,5 @@ Aqui vai um exemplo de TODO list contendo as etapas.
 - [X] Diagramas UML (19-mar-2021)
 - [X] Interface Gráfica (02-abr-2021)
 - [X] Protótipo do jogo (02-abr-2021)
-- [ ] Versão final com relatório e vídeo (07-mai-2021)
+- [X] Versão final com relatório e vídeo (07-mai-2021)
 
-# README Dentro da pasta do prototipo contendo informações sobre ele.
