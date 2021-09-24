@@ -11,19 +11,15 @@ class Jogador(Personagem):
     def __init__(self):
         super().__init__(velocidade=400, posicao=[10,420])
         self.constantes = Constantes()
-
         self.__animacoes = [Animacao((26, 29), 'versao_final/src/cavaleiro/movimento/'),
                             Animacao((26, 29), 'versao_final/src/cavaleiro/pulo/'),
                             Animacao((26, 29), 'versao_final/src/cavaleiro/ataque/', rodar_uma_vez=True)]
 
         self.__animacao_atual = pygame.sprite.Group(self.__animacoes[0])
-
         self.__tamanho_pulo = 55
         self.__velocidade_y = 10
-
         self.__pulando = False
         self.__atacando = False
-        
         self.__ataque_rect = None
         self.__rect = self.__animacao_atual.sprites()[0].rect
         self.som_pulo = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/pulo.wav')
@@ -75,7 +71,7 @@ class Jogador(Personagem):
 
     # ataque do jogador
     def ataque(self, espaço):
-        if espaço and self.__atacando is False and self.__pulando is False and self.stamina > 0:
+        if espaço and not self.__atacando and not self.__pulando and not self.invulneravel and self.stamina > 0:
             self.stamina -= 1
             self.som_ataque.play()
             self.__atacando = True
