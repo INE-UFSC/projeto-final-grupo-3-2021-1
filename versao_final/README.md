@@ -13,3 +13,4 @@ Integrantes: Anthon Gretter, Nicolas Elias, Mauricio Konrath, Rian Serena
 
 * Movimento do jogador: <b>ARROWS</b>
 * Ataque do jogador: <b>SPACEBAR</b>
+   * <i>OBS.: Cuidado que o ataque tem stamina :)</i>
