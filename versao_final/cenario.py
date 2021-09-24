@@ -14,21 +14,24 @@ class Cenario:
         self.__velocidade_acumulada = 0     # velocidade acumulada da aceleração do cenário
         self.__aceleracao = 0.5
         self.__coracoes = [pygame.sprite.Group(coracao) for coracao in [EstaticoCoracao([800, 24]),
-                                                                        EstaticoCoracao([840, 24]),
+                                                                        EstaticoCoracao(
+                                                                            [840, 24]),
                                                                         EstaticoCoracao([880, 24])]]
 
         self.__barras_stamina = [pygame.sprite.Group(barra) for barra in [EstaticoBarraStamina([650, 10], 'versao_final/src/stamina/stamina_0.png'),
-                                                                        EstaticoBarraStamina([650, 10], 'versao_final/src/stamina/stamina_1.png'),
-                                                                        EstaticoBarraStamina([650, 10], 'versao_final/src/stamina/stamina_2.png'),
-                                                                        EstaticoBarraStamina([650, 10],'versao_final/src/stamina/stamina_3.png')]]
+                                                                          EstaticoBarraStamina(
+                                                                              [650, 10], 'versao_final/src/stamina/stamina_1.png'),
+                                                                          EstaticoBarraStamina(
+                                                                              [650, 10], 'versao_final/src/stamina/stamina_2.png'),
+                                                                          EstaticoBarraStamina([650, 10], 'versao_final/src/stamina/stamina_3.png')]]
 
         self.__posicao_fundo = [0, 0]
         self.__posicao_fundo_inv = [928, 0]
         self.__fundos = pygame.sprite.Group(EstaticoFundo(self.__posicao_fundo, 'versao_final/src/backgrounds/fundo_jogo.jpg'),
                                             EstaticoFundo(self.__posicao_fundo_inv, 'versao_final/src/backgrounds/fundo_jogo_inv.jpg'))
 
-
     # Getters e setters
+
     @property
     def coracoes(self):
         return self.__coracoes
@@ -49,13 +52,14 @@ class Cenario:
     def poder_na_tela(self, novo):
         self.__poder_na_tela = novo
 
-
     # invoca poderes na tela
+
     def invocador(self, dt):
         if pygame.time.get_ticks() - self.__tempo_invocado >= 5000:
             self.__poder_na_tela = choice([InvPoder(300+self.__velocidade_acumulada, [1328, 424]),
-                                            VidaPoder(300+self.__velocidade_acumulada, [1328, 424]),
-                                            StaminaPoder(300+self.__velocidade_acumulada, [1328, 424])])
+                                           VidaPoder(
+                                               300+self.__velocidade_acumulada, [1328, 424]),
+                                           StaminaPoder(300+self.__velocidade_acumulada, [1328, 424])])
 
             self.__tempo_invocado = pygame.time.get_ticks()
 
@@ -63,8 +67,8 @@ class Cenario:
         if self.__poder_na_tela != None:
             self.__poder_na_tela.atualizar(dt)
 
-
     # acelera todos os objetos do cenário até um certo valor (obstáculos e poderes)
+
     def acelerar(self):
         if self.__velocidade_acumulada < 200:
             if self.obstaculos[0].posicao[0] <= -39:
@@ -75,8 +79,8 @@ class Cenario:
                 if self.poder_na_tela != None:
                     self.__poder_na_tela.velocidade += self.__aceleracao
 
-
     # funçao que movimenta o cenario
+
     def mover_cenario(self, dt):
         self.__posicao_fundo[0] -= (1 + self.__velocidade_acumulada*dt/3)
         self.__posicao_fundo_inv[0] -= (1 + self.__velocidade_acumulada*dt/3)
@@ -87,14 +91,14 @@ class Cenario:
 
             fundo.rect.topleft = posicao
 
-
     # desenha o chão do jogo
+
     def desenhar(self):
         self.__fundos.draw(tela.screen)
         self.__fundos.update()
 
-
     # atualiza os obstáculos
+
     def atualizar(self, dt):
         self.desenhar()
         self.acelerar()

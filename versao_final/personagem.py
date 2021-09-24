@@ -2,6 +2,7 @@ import pygame
 from abc import ABC
 
 # CLASSE ABSTRATA
+
 class Personagem(ABC):
 
     def __init__(self, posicao, velocidade):
@@ -16,15 +17,15 @@ class Personagem(ABC):
         self.__velocidade = velocidade
         self.__posicao = posicao
 
-
     # Torna o Personagem invulnerável por um determinado tempo, que assume 0.5 segundos caso o valor não for especificado
+
     def tornar_invulneravel_por(self, tempo_inv=500):
         self.__tempo_inicial_inv = pygame.time.get_ticks()
         self.__tempo_inv = tempo_inv
         self.__invulneravel = True
 
-
     # getters
+
     @property
     def cor(self) -> tuple:
         return self.__cor
@@ -69,8 +70,8 @@ class Personagem(ABC):
     def tempo_inv(self) -> float:
         return self.__tempo_inv
 
-
     # setters
+
     @cor.setter
     def cor(self, nova: tuple):
         self.__cor = nova

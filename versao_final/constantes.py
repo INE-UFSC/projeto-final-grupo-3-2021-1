@@ -1,8 +1,8 @@
 from singleton import Singleton
 import pygame
 
-
 # constantes globais
+
 class Constantes(Singleton):
 
     def __init__(self):
@@ -12,4 +12,3 @@ class Constantes(Singleton):
         self.LIMITE_CHAO = 420
         self.VELOCIDADE_QUEDA = 0.06
         self.VELOCIDADE = 10
-        
