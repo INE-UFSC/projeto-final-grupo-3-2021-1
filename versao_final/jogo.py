@@ -17,6 +17,7 @@ class Jogo():
         self.som_bateu = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/obstaculos.wav')
         self.som_pegou_vida = pygame.mixer.Sound('versao_final/src/efeitos_sonoros/vida.mp3')
 
+
     # Getters e setters
     @property
     def jogador(self):
@@ -65,7 +66,6 @@ class Jogo():
 
     # Pontua e mostra a pontuação com base no tempo de jogo e na velocidade dos obstaculos
     def pontuar(self, dt):
-
         self.__pontuacao += dt * (sum([obs.velocidade for obs in self.__cenario.obstaculos])) / 100
 
         # mostra na tela a pontuação
@@ -79,6 +79,7 @@ class Jogo():
         for vida_index in range(self.__jogador.vida):
             self.__cenario.coracoes[vida_index].draw(tela.screen)
             self.__cenario.coracoes[vida_index].update()
+
 
     # desenho da stamina (barrinha)
     def desenhar_stamina(self):
@@ -95,5 +96,6 @@ class Jogo():
             self.desenhar_vidas()           # desenha as vidas do jogador na tela, com base no número atual de vidas
             self.desenhar_stamina()         # desenha a barra de stamina x, sendo x o número da stamina atual
             self.pontuar(dt)                # pontua jogo e imprime a pontuação
+        
         else:
             self.__final = True

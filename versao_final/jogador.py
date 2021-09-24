@@ -4,6 +4,7 @@ from tela import tela
 from constantes import Constantes
 from animacao import Animacao
 
+
 # HERANÇA de personagem com especializaçao
 class Jogador(Personagem):
 
@@ -112,8 +113,6 @@ class Jogador(Personagem):
             self.__ataque_rect.x = self.__rect.x+40 
             self.__ataque_rect.y = self.__rect.y
 
-            # pygame.draw.rect(tela.screen, pygame.Color("white"), self.__ataque_rect)
-
             if self.__animacao_atual.sprites()[0].atualizar is False:
                 self.trocar_animacao(0)
                 self.__atacando = False
@@ -151,4 +150,3 @@ class Jogador(Personagem):
         self.acoes(dt)
         self.desenhar()
         self.eventos()
-

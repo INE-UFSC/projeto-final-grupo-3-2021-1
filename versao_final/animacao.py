@@ -19,14 +19,11 @@ class Animacao(pygame.sprite.Sprite):
         
         self.sprite_atual_index = 0
         self.velocidade_troca_sprite = velocidade
-
         self.rodar_uma_vez = rodar_uma_vez
         self.atualizar = True
-
         self.sprite_atual = self.sprites[self.sprite_atual_index]
         self.rect = self.sprite_atual.get_rect()
         self.dimensao = dimensao
-
         self.sprite_atual = pygame.transform.scale(self.sprite_atual, (dimensao[0]*2, dimensao[1]*2))
         self.image = self.sprite_atual
 
@@ -109,4 +106,3 @@ class EstaticoPoder(Estatico):
                         path,
                         (17, 17),
                         escalar=True)
-

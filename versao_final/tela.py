@@ -16,4 +16,5 @@ class Tela(Singleton):
         # setup da janela
         self.screen = pygame.display.set_mode(display)
 
+
 tela = Tela()

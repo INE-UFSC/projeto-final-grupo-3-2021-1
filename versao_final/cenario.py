@@ -27,6 +27,7 @@ class Cenario:
         self.__fundos = pygame.sprite.Group(EstaticoFundo(self.__posicao_fundo, 'versao_final/src/backgrounds/fundo_jogo.jpg'),
                                             EstaticoFundo(self.__posicao_fundo_inv, 'versao_final/src/backgrounds/fundo_jogo_inv.jpg'))
 
+
     # Getters e setters
     @property
     def coracoes(self):
@@ -92,12 +93,13 @@ class Cenario:
         self.__fundos.draw(tela.screen)
         self.__fundos.update()
 
+
+    # atualiza os obstáculos
     def atualizar(self, dt):
         self.desenhar()
         self.acelerar()
         self.mover_cenario(dt)
         self.invocador(dt)
 
-        # atualiza os obstáculos
         for obs in self.__obstaculos:
             obs.atualizar(dt)

@@ -16,6 +16,7 @@ class Poder(abc.ABC):
         self.__retangulo = pygame.Rect(self.__posicao[0], self.__posicao[1], 10, 10)
         self.__animacao = pygame.sprite.Group(EstaticoPoder(posicao, sprite_path))
     
+
     # getters
     @property
     def diferencial(self):
@@ -32,6 +33,7 @@ class Poder(abc.ABC):
     @property
     def retangulo(self):
         return self.__retangulo
+
 
     # setters
     @velocidade.setter
@@ -57,8 +59,6 @@ class Poder(abc.ABC):
         self.__animacao.sprites()[0].rect.topleft = self.__posicao
         self.__retangulo = self.__animacao.sprites()[0].rect
         self.__animacao.draw(tela.screen)
-        # pygame.draw.rect(Tela().screen, self.__cor, self.__retangulo)
-        # self.__retangulo = pygame.Rect(self.__posicao[0], self.__posicao[1], 10, 10)
 
 
     def atualizar(self, dt):
@@ -75,6 +75,7 @@ class VidaPoder(Poder):
                         posicao=posicao,
                         sprite_path='versao_final/src/estaticos/pocao_vida.png')
 
+
     def usar(self, jogador: Jogador):
         if jogador.vida != jogador.vida_maxima:
             jogador.vida += self.diferencial
@@ -88,6 +89,7 @@ class StaminaPoder(Poder):
                         velocidade=velocidade,
                         posicao=posicao,
                         sprite_path='versao_final/src/estaticos/pocao_stamina.png')
+
 
     def usar(self, jogador: Jogador):
         if jogador.stamina != jogador.stamina_maxima:
@@ -103,6 +105,7 @@ class InvPoder(Poder):
                         velocidade=velocidade,
                         posicao=posicao,
                         sprite_path='versao_final/src/estaticos/pocao_inv.png')
+
 
     # funçao que é chamado quando o jogador pega o poder, criando um som e chamando a funçao da invulnerabilidade
     def usar(self, jogador: Jogador):

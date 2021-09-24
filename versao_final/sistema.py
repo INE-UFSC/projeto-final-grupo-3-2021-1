@@ -16,16 +16,13 @@ class Sistema(Singleton):
         pygame.init()
         pygame.key.set_repeat(500, 100)
         pygame.mixer.init()
-
         self.__jogo = Jogo()                        # objeto do jogo
         self.__pontuacoes_dao = PontuacoesDAO()     # DAO das pontuacoes
         self.__ranking = {}                         # ranking das pontuacoes
-
         self.__estado = None                        # estado da sistema (janela)
         self.__eventos = None                       # eventos de input do usuario
         self.__fundo_atual = None                   # atual fundo da janela
         self.__musica_atual = None                  # musica atual da janela
-
         self.__click = False                        # interação do usuário com a janela
         self.__clock = pygame.time.Clock()          # pygame clock
         self.__dt = 0                               # tempo de um frame (delta time)
@@ -85,6 +82,7 @@ class Sistema(Singleton):
 
         if loop:
             mixer.music.play(-1)
+       
         else:
             mixer.music.play()
 
@@ -100,11 +98,14 @@ class Sistema(Singleton):
     def track_eventos(self):
         self.__eventos = pygame.event.get()
         for event in self.__eventos:
+            
             if event.type == pygame.QUIT:
                 self.sair()
+            
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     self.__click = True
+            
             else:
                 self.__click = False
 
@@ -152,6 +153,7 @@ class Sistema(Singleton):
     @property
     def ranking(self):
         return self.__ranking
+
 
     # setters
     @ranking.setter

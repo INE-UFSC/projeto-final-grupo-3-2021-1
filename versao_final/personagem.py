@@ -70,6 +70,7 @@ class Personagem(ABC):
     def tempo_inv(self) -> float:
         return self.__tempo_inv
 
+
     # setters
     @cor.setter
     def cor(self, nova: tuple):
