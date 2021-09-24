@@ -1,10 +1,11 @@
 from animacao import Animacao
 import pygame
 from tela import tela
+from abc import ABC
 from random import randint
 
 
-class Obstaculo():
+class Obstaculo(ABC):
 
     def __init__(self, posicao: list, velocidade: int, animacoes: list):
         self.__vivo = True
