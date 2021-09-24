@@ -78,8 +78,8 @@ class Cenario:
 
     # funçao que movimenta o cenario
     def mover_cenario(self, dt):
-        self.__posicao_fundo[0] -= (0.5 + self.__velocidade_acumulada*dt/3)
-        self.__posicao_fundo_inv[0] -= (0.5 + self.__velocidade_acumulada*dt/3)
+        self.__posicao_fundo[0] -= (1 + self.__velocidade_acumulada*dt/3)
+        self.__posicao_fundo_inv[0] -= (1 + self.__velocidade_acumulada*dt/3)
 
         for fundo, posicao in zip(self.__fundos.sprites(), [self.__posicao_fundo, self.__posicao_fundo_inv]):
             if posicao[0] <= -928:

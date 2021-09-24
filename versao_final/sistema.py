@@ -55,7 +55,7 @@ class Sistema(Singleton):
     # salva o jogo atual
     def salvar(self, nome: str):
         self.__pontuacoes_dao.add(nome, self.__jogo.pontuacao)
-        self.atualizar_posicoes()
+        self.atualizar_ranking()
 
 
     # troca o atual estado por outro
@@ -83,7 +83,7 @@ class Sistema(Singleton):
 
 
     # Atualiza as posiçoes do ranking organizando do maior para o menor
-    def atualizar_posicoes(self):
+    def atualizar_ranking(self):
         ordenar_ranking = lambda item: item[1]
         self.__ranking = self.__pontuacoes_dao.get_all()
         self.__ranking = sorted(self.__ranking, key=ordenar_ranking, reverse=True)
